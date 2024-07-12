@@ -17,4 +17,8 @@ public class NewsService {
     public List<Article> getAllArticles() {
         return newsDao.getAllArticles();
     }
+
+    public Article getArticleById(int id) {
+        return newsDao.getArticleById(id);
+    }
 }

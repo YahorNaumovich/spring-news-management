@@ -20,4 +20,9 @@ public class NewsDao {
                 .getResultList();
     }
 
+    public Article getArticleById(int id) {
+        return sessionFactory
+                .getCurrentSession()
+                .get(Article.class, id);
+    }
 }
