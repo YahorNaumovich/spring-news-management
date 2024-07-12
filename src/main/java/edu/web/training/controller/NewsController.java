@@ -22,14 +22,14 @@ public class NewsController {
     }
 
     @RequestMapping("/news")
-    public String news(Model model) {
+    public String showAllNews(Model model) {
         List<Article> articles = newsService.getAllArticles();
         model.addAttribute("articles", articles);
         return "news";
     }
 
     @RequestMapping("/article")
-    public String article(@RequestParam("id") int id, Model model) {
+    public String showArticle(@RequestParam("id") int id, Model model) {
         Article article = newsService.getArticleById(id);
         model.addAttribute("article", article);
         return "article";
