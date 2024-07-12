@@ -10,11 +10,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up - News Portal</title>
+        <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/header.css'/>" />
+
     <link rel="stylesheet" type="text/css"
     	href="<c:url value="/resources/css/signup.css"/>" />
   </head>
   <body>
-
+      <jsp:include page="/WEB-INF/view/header.jsp" />
     <main class="signup-container">
       <form class="signup-form">
         <h2>Sign Up</h2>

@@ -10,34 +10,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>News Portal</title>
+        <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/header.css'/>" />
+
     <link rel="stylesheet" type="text/css"
 	href="<c:url value="/resources/css/news-page.css"/>" />
   </head>
   <body>
-    <header class="header">
-      <div class="header-left">
-        <a href="#">Home</a>
-        <a href="#">Add article</a>
-        <a href="#">Edit article</a>
-        <a href="#">Delete article</a>
-        <div class="dropdown">
-          <a href="#" class="dropbtn">Categories</a>
-          <div class="dropdown-content">
-            <a href="#">Category 1</a>
-            <a href="#">Category 2</a>
-            <a href="#">Category 3</a>
-            <!-- Add more categories as needed -->
-          </div>
-        </div>
-      </div>
-      <div class="header-right">
-        <a href="<c:url value='/login/page'/>">Log in</a>
-        <a href="<c:url value='/signup/page'/>">Sign up</a>
-      </div>
-    </header>
+
+      <jsp:include page="/WEB-INF/view/header.jsp" />
 
     <main class="news-container">
-      <a href="#" class="news-article">
+      <a href="<c:url value='/article'/>" class="news-article">
         <img src="<c:url value="/resources/images/image.jpg"/>" alt="News Image" />
         <div class="news-content">
           <h2>News Title 1</h2>

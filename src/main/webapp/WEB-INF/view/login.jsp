@@ -10,10 +10,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - News Portal</title>
+        <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/header.css'/>" />
+
     <link rel="stylesheet" type="text/css"
     	href="<c:url value="/resources/css/login.css"/>" />
   </head>
   <body>
+        <jsp:include page="/WEB-INF/view/header.jsp" />
     <main class="login-container">
       <form class="login-form">
         <h2>Login</h2>

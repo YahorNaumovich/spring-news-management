@@ -16,4 +16,9 @@ public class NewsController {
         return "news";
     }
 
+    @RequestMapping("/article")
+    public String article() {
+        return "article";
+    }
+
 }
