@@ -24,8 +24,13 @@ public class NewsController {
     }
 
     @RequestMapping("/news")
-    public String showAllNews(Model model) {
-        List<Article> articles = newsService.getAllArticles();
+    public String showAllNews(@RequestParam(value = "category", required = false) Integer categoryId, Model model) {
+        List<Article> articles;
+        if (categoryId != null) {
+            articles = newsService.getArticlesByCategory(categoryId);
+        } else {
+            articles = newsService.getAllArticles();
+        }
         List<Category> categories = newsService.getAllCategories();
         model.addAttribute("articles", articles);
         model.addAttribute("categories", categories);

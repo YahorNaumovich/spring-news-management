@@ -11,4 +11,6 @@ public interface NewsService {
     Article getArticleById(int id);
 
     List<Category> getAllCategories();
+
+    List<Article> getArticlesByCategory(int categoryId);
 }

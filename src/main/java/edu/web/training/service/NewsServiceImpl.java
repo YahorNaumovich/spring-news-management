@@ -30,4 +30,9 @@ public class NewsServiceImpl implements NewsService {
     public List<Category> getAllCategories() {
         return newsDao.getAllCategories();
     }
+
+    @Override
+    public List<Article> getArticlesByCategory(int categoryId) {
+        return newsDao.getArticlesByCategory(categoryId);
+    }
 }

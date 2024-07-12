@@ -36,4 +36,13 @@ public class NewsDaoImpl implements NewsDao {
                 .createQuery("from Category", Category.class)
                 .getResultList();
     }
+
+    @Override
+    public List<Article> getArticlesByCategory(int categoryId) {
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery("from Article where category.id = :categoryId", Article.class)
+                .setParameter("categoryId", categoryId)
+                .getResultList();
+    }
 }

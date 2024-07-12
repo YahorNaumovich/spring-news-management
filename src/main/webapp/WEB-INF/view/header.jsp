@@ -8,13 +8,12 @@
   <div class="header-left">
     <a href="<c:url value='/'/>">Home</a>
     <a href="<c:url value='/add-article'/>">Add article</a>
-    <a href="<c:url value='/edit-article'/>">Edit article</a>
-    <a href="<c:url value='/delete-article'/>">Delete article</a>
     <div class="dropdown">
       <a href="#" class="dropbtn">Categories</a>
       <div class="dropdown-content">
+      <a href="<c:url value='/news'/>">All</a>
       <c:forEach var="category" items="${categories}">
-      <a href="#">${category.name}</a>
+      <a href="<c:url value='/news?category=${category.id}'/>">${category.name}</a>
       </c:forEach>
       </div>
     </div>

@@ -12,4 +12,6 @@ public interface NewsDao {
     Article getArticleById(int id);
 
     List<Category> getAllCategories();
+
+    List<Article> getArticlesByCategory(int categoryId);
 }
