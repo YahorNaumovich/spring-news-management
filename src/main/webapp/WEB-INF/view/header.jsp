@@ -13,10 +13,9 @@
     <div class="dropdown">
       <a href="#" class="dropbtn">Categories</a>
       <div class="dropdown-content">
-        <a href="#">Category 1</a>
-        <a href="#">Category 2</a>
-        <a href="#">Category 3</a>
-        <!-- Add more categories as needed -->
+      <c:forEach var="category" items="${categories}">
+      <a href="#">${category.name}</a>
+      </c:forEach>
       </div>
     </div>
   </div>

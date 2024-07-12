@@ -1,6 +1,7 @@
 package edu.web.training.dao;
 
 import edu.web.training.entity.Article;
+import edu.web.training.entity.Category;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,5 +27,13 @@ public class NewsDaoImpl implements NewsDao {
         return sessionFactory
                 .getCurrentSession()
                 .get(Article.class, id);
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery("from Category", Category.class)
+                .getResultList();
     }
 }

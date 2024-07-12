@@ -1,6 +1,7 @@
 package edu.web.training.controller;
 
 import edu.web.training.entity.Article;
+import edu.web.training.entity.Category;
 import edu.web.training.service.NewsService;
 import edu.web.training.service.NewsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,9 @@ public class NewsController {
     @RequestMapping("/news")
     public String showAllNews(Model model) {
         List<Article> articles = newsService.getAllArticles();
+        List<Category> categories = newsService.getAllCategories();
         model.addAttribute("articles", articles);
+        model.addAttribute("categories", categories);
         return "news";
     }
 
