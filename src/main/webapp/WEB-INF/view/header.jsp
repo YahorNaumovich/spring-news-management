@@ -7,7 +7,6 @@
 <header class="header">
   <div class="header-left">
     <a href="<c:url value='/'/>">Home</a>
-    <a href="<c:url value='/add-article'/>">Add article</a>
     <div class="dropdown">
       <a href="#" class="dropbtn">Categories</a>
       <div class="dropdown-content">
