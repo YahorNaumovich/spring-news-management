@@ -61,3 +61,9 @@ body {
 .login-button:hover {
   background-color: #1a336e; /* Darker blue on hover */
 }
+
+.error {
+  color: #ff0000; /* Red color for error text */
+  font-size: 0.9em;
+  margin-bottom: 15px;
+}
