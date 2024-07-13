@@ -1,5 +1,6 @@
-package edu.web.training.dao;
+package edu.web.training.dao.impl;
 
+import edu.web.training.dao.NewsDao;
 import edu.web.training.entity.Article;
 import edu.web.training.entity.Category;
 import org.hibernate.SessionFactory;

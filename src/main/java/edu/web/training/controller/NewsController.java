@@ -3,7 +3,6 @@ package edu.web.training.controller;
 import edu.web.training.entity.Article;
 import edu.web.training.entity.Category;
 import edu.web.training.service.NewsService;
-import edu.web.training.service.NewsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
