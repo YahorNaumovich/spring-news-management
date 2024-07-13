@@ -11,14 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/login")
-public class LoginController {
+@RequestMapping("/user")
+public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/page")
+    @RequestMapping("/login")
     public String goToLoginPage() {
         return "login";
+    }
+
+    @RequestMapping("/signup")
+    public String goToSignUpPage() {
+        return "signup";
     }
 
     @PostMapping("/authenticate")

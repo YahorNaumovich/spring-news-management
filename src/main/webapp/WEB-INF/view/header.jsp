@@ -21,11 +21,11 @@
     <c:choose>
       <c:when test="${not empty sessionScope.user}">
         <a href="<c:url value='/profile'/>">${sessionScope.user.username}</a>
-        <a href="<c:url value='/login/logout'/>">Log out</a>
+        <a href="<c:url value='/user/logout'/>">Log out</a>
       </c:when>
       <c:otherwise>
-        <a href="<c:url value='/login/page'/>">Log in</a>
-        <a href="<c:url value='/signup/page'/>">Sign up</a>
+        <a href="<c:url value='/user/login'/>">Log in</a>
+        <a href="<c:url value='/user/signup'/>">Sign up</a>
       </c:otherwise>
     </c:choose>
   </div>

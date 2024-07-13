@@ -16,7 +16,7 @@
   <body>
     <jsp:include page="/WEB-INF/view/header.jsp" />
     <main class="login-container">
-      <form class="login-form" action="<c:url value='/login/authenticate'/>" method="post">
+      <form class="login-form" action="<c:url value='/user/authenticate'/>" method="post">
         <h2>Login</h2>
         <c:if test="${not empty error}">
           <div class="error">${error}</div>
