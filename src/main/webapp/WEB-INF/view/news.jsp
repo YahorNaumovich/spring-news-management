@@ -20,14 +20,14 @@
         <c:choose>
             <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin' || sessionScope.user.userRole.name == 'Editor')}">
                 <div class="add-article-link">
-                    <a href="<c:url value='/add-article'/>" class="button">Add article</a>
+                    <a href="<c:url value='/article/add'/>" class="button">Add article</a>
                 </div>
             </c:when>
         </c:choose>
         <div class="news-container">
             <c:forEach var="article" items="${articles}">
                 <a href="<c:url value='/article?id=${article.id}'/>" class="news-article">
-                    <img src="<c:url value='/resources/images/image.jpg'/>" alt="News Image" />
+                    <img src="<c:url value='${article.imagePath}'/>" alt="News Image" />
                     <div class="news-content">
                         <h2>${article.title}</h2>
                         <div class="article-footer">

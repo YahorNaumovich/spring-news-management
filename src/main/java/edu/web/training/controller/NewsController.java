@@ -3,12 +3,17 @@ package edu.web.training.controller;
 import edu.web.training.entity.Article;
 import edu.web.training.entity.Category;
 import edu.web.training.service.NewsService;
+import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -18,7 +23,7 @@ public class NewsController {
     private NewsService newsService;
 
     @RequestMapping("/")
-    public  String redirectToMainPage() {
+    public String redirectToMainPage() {
         return "redirect:/news";
     }
 
@@ -42,5 +47,23 @@ public class NewsController {
         model.addAttribute("article", article);
         return "article";
     }
+
+    @RequestMapping("/article/add")
+    public String goToArticleForm(Model model) {
+        List<Category> categories = newsService.getAllCategories();
+        model.addAttribute("categories", categories);
+        return "article-form";
+    }
+
+    @PostMapping("/article/save")
+    public String saveArticle(@RequestParam("title") String title,
+                              @RequestParam("articleText") String articleText,
+                              @RequestParam("image") MultipartFile image,
+                              @RequestParam("category") int categoryId,
+                              @RequestParam("userId") int userId) {
+        newsService.saveArticle(title, articleText, image, categoryId, userId);
+        return "redirect:/news";
+    }
+
 
 }

@@ -2,7 +2,9 @@ package edu.web.training.dao.impl;
 
 import edu.web.training.dao.NewsDao;
 import edu.web.training.entity.Article;
+import edu.web.training.entity.ArticleText;
 import edu.web.training.entity.Category;
+import edu.web.training.entity.User;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -45,5 +47,34 @@ public class NewsDaoImpl implements NewsDao {
                 .createQuery("from Article where category.id = :categoryId", Article.class)
                 .setParameter("categoryId", categoryId)
                 .getResultList();
+    }
+
+    @Override
+    public void saveArticle(String title, String articleText, String filePath, int categoryId, int userId) {
+
+
+        // Create and save ArticleText entity
+        ArticleText text = new ArticleText();
+        text.setText(articleText);
+        sessionFactory.getCurrentSession().persist(text);
+
+        // Create Article entity and set properties
+        Article article = new Article();
+        article.setTitle(title);
+        article.setArticleText(text);
+        article.setImagePath(filePath);
+
+        article.setCategory(sessionFactory
+                .getCurrentSession()
+                .get(Category.class, categoryId));
+
+        article.setUser(sessionFactory
+                .getCurrentSession()
+                .get(User.class, userId));
+
+        // Save Article entity
+        sessionFactory
+                .getCurrentSession()
+                .persist(article);
     }
 }

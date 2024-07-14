@@ -1,0 +1,72 @@
+/* login.css (can be reused as article.css with minor modifications) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f4f8; /* Light gray-blue background */
+}
+
+.article-container {
+  max-width: 600px; /* Increased width for article form */
+  margin: 50px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+}
+
+.article-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-form h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #1e3a8a; /* Dark blue for title */
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 1em;
+  margin-bottom: 5px;
+  color: #333; /* Darker color for labels */
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.article-button {
+  padding: 10px;
+  font-size: 1em;
+  color: white;
+  background-color: #1e3a8a; /* Dark blue for button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.article-button:hover {
+  background-color: #1a336e; /* Darker blue on hover */
+}
+
+.error {
+  color: #ff0000; /* Red color for error text */
+  font-size: 0.9em;
+  margin-bottom: 15px;
+}

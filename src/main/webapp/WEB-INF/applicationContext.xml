@@ -20,6 +20,9 @@
     <!-- Add support for conversion, formatting and validation support -->
     <mvc:annotation-driven/>
 
+    <!-- Multipart resolver -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
+
     <!-- Define Spring MVC view resolver -->
     <bean
             class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -65,6 +68,8 @@
 
     <!-- Add support for reading web resources: css, images, js, etc ... -->
     <mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+
+    <mvc:resources location="/images/" mapping="/images/**" />
 
 
 

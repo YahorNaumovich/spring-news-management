@@ -14,4 +14,6 @@ public interface NewsDao {
     List<Category> getAllCategories();
 
     List<Article> getArticlesByCategory(int categoryId);
+
+    void saveArticle(String title, String articleText, String filePath, int categoryId, int userId);
 }
