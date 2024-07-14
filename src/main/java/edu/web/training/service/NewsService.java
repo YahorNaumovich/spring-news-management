@@ -16,4 +16,6 @@ public interface NewsService {
     List<Article> getArticlesByCategory(int categoryId);
 
     void saveArticle(String title, String articleText, MultipartFile image, int categoryId, int userId);
+
+    void updateArticle(int articleId ,String title, String articleText, MultipartFile image, int categoryId, int userId);
 }

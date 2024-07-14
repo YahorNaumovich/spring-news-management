@@ -77,4 +77,27 @@ public class NewsDaoImpl implements NewsDao {
                 .getCurrentSession()
                 .persist(article);
     }
+
+    @Override
+    public void updateArticleWithoutImage(int articleId, String title, String articleText, int categoryId, int userId) {
+        Article article = getArticleById(articleId);
+        if (article != null) {
+            article.setTitle(title);
+            article.getArticleText().setText(articleText);
+            article.setCategory(sessionFactory.getCurrentSession().get(Category.class, categoryId));
+            sessionFactory.getCurrentSession().merge(article);
+        }
+    }
+
+    @Override
+    public void updateArticle(int articleId, String title, String articleText, String relativePath, int categoryId, int userId) {
+        Article article = getArticleById(articleId);
+        if (article != null) {
+            article.setTitle(title);
+            article.getArticleText().setText(articleText);
+            article.setImagePath(relativePath);
+            article.setCategory(sessionFactory.getCurrentSession().get(Category.class, categoryId));
+            sessionFactory.getCurrentSession().merge(article);
+        }
+    }
 }

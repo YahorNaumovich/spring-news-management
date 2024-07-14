@@ -63,4 +63,27 @@ public class NewsServiceImpl implements NewsService {
 
         newsDao.saveArticle(title, articleText, relativePath, categoryId, userId);
     }
+
+    @Override
+    public void updateArticle(int articleId, String title, String articleText, MultipartFile image, int categoryId, int userId) {
+
+        if (image.isEmpty()) {
+            newsDao.updateArticleWithoutImage(articleId, title, articleText, categoryId, userId);
+        } else {
+            String uploadPath = servletContext.getRealPath("/images");
+            String filePath = uploadPath + File.separator + image.getOriginalFilename();
+            File dest = new File(filePath);
+
+            try {
+                image.transferTo(dest);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Save the relative path to the database
+            String relativePath = "/images/" + image.getOriginalFilename();
+
+            newsDao.updateArticle(articleId, title, articleText, relativePath, categoryId, userId);
+        }
+    }
 }

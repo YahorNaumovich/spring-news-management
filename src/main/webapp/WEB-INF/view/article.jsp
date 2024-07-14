@@ -23,6 +23,15 @@
                     <span class="author">by ${article.user.username}</span>
                     <span class="category">${article.category.name}</span>
                 </div>
+        <c:choose>
+            <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin' || sessionScope.user.userRole.name == 'Editor')}">
+                <div class="article-actions">
+                    <a href="<c:url value='/article/edit?id=${article.id}'/>">Edit</a>
+                    <a href="<c:url value='/delete-article/${article.id}'/>" class="delete">Delete</a>
+                </div>
+            </c:when>
+        </c:choose>
+
                 <img src="<c:url value='${article.imagePath}'/>" alt="Article Image" class="article-image" />
                 <div class="article-content">
                     <p>${article.articleText.text}</p>

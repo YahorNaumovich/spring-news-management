@@ -55,6 +55,15 @@ public class NewsController {
         return "article-form";
     }
 
+    @RequestMapping("/article/edit")
+    public String goToArticleEditForm(@RequestParam("id") int id, Model model) {
+        List<Category> categories = newsService.getAllCategories();
+        Article article = newsService.getArticleById(id);
+        model.addAttribute("article", article);
+        model.addAttribute("categories", categories);
+        return "article-form";
+    }
+
     @PostMapping("/article/save")
     public String saveArticle(@RequestParam("title") String title,
                               @RequestParam("articleText") String articleText,
@@ -62,6 +71,18 @@ public class NewsController {
                               @RequestParam("category") int categoryId,
                               @RequestParam("userId") int userId) {
         newsService.saveArticle(title, articleText, image, categoryId, userId);
+        return "redirect:/news";
+    }
+
+    @PostMapping("/article/update")
+    public String updateArticle(
+            @RequestParam("articleId") int articleId,
+            @RequestParam("title") String title,
+            @RequestParam("articleText") String articleText,
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("category") int categoryId,
+            @RequestParam("userId") int userId) {
+        newsService.updateArticle(articleId,title, articleText, image, categoryId, userId);
         return "redirect:/news";
     }
 
