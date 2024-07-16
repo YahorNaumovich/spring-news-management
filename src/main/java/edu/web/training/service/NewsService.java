@@ -18,4 +18,6 @@ public interface NewsService {
     void saveArticle(String title, String articleText, MultipartFile image, int categoryId, int userId);
 
     void updateArticle(int articleId ,String title, String articleText, MultipartFile image, int categoryId, int userId);
+
+    void deleteArticle(int id);
 }

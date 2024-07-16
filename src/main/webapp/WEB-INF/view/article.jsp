@@ -27,7 +27,7 @@
             <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin' || sessionScope.user.userRole.name == 'Editor')}">
                 <div class="article-actions">
                     <a href="<c:url value='/article/edit?id=${article.id}'/>">Edit</a>
-                    <a href="<c:url value='/delete-article/${article.id}'/>" class="delete">Delete</a>
+                    <a href="<c:url value='/article/delete?id=${article.id}'/>" class="delete">Delete</a>
                 </div>
             </c:when>
         </c:choose>

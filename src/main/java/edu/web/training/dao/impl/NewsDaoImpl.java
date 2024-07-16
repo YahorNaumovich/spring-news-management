@@ -100,4 +100,14 @@ public class NewsDaoImpl implements NewsDao {
             sessionFactory.getCurrentSession().merge(article);
         }
     }
+
+    @Override
+    public void deleteArticle(int id) {
+        Article article = getArticleById(id);
+        if (article != null) {
+            sessionFactory
+                    .getCurrentSession()
+                    .remove(article);
+        }
+    }
 }
