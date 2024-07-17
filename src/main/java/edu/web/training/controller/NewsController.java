@@ -1,12 +1,14 @@
 package edu.web.training.controller;
 
 import edu.web.training.entity.Article;
+import edu.web.training.entity.ArticleForm;
 import edu.web.training.entity.Category;
 import edu.web.training.service.NewsService;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,7 +53,9 @@ public class NewsController {
     @RequestMapping("/article/add")
     public String goToArticleForm(Model model) {
         List<Category> categories = newsService.getAllCategories();
+        model.addAttribute("articleForm", new ArticleForm());
         model.addAttribute("categories", categories);
+        model.addAttribute("isEditMode", false);
         return "article-form";
     }
 
@@ -59,30 +63,29 @@ public class NewsController {
     public String goToArticleEditForm(@RequestParam("id") int id, Model model) {
         List<Category> categories = newsService.getAllCategories();
         Article article = newsService.getArticleById(id);
-        model.addAttribute("article", article);
+        ArticleForm articleForm = new ArticleForm();
+        articleForm.setArticleId(article.getId());
+        articleForm.setTitle(article.getTitle());
+        articleForm.setArticleText(article.getArticleText().getText());
+        articleForm.setCategoryId(article.getCategory().getId());
+        articleForm.setUserId(article.getUser().getId());
+        model.addAttribute("articleForm", articleForm);
         model.addAttribute("categories", categories);
+        model.addAttribute("isEditMode", true);
         return "article-form";
     }
 
     @PostMapping("/article/save")
-    public String saveArticle(@RequestParam("title") String title,
-                              @RequestParam("articleText") String articleText,
-                              @RequestParam("image") MultipartFile image,
-                              @RequestParam("category") int categoryId,
-                              @RequestParam("userId") int userId) {
-        newsService.saveArticle(title, articleText, image, categoryId, userId);
+    public String saveArticle(@ModelAttribute ArticleForm articleForm) {
+        newsService.saveArticle(articleForm.getTitle(), articleForm.getArticleText(),
+                articleForm.getImage(), articleForm.getCategoryId(), articleForm.getUserId());
         return "redirect:/news";
     }
 
     @PostMapping("/article/update")
-    public String updateArticle(
-            @RequestParam("articleId") int articleId,
-            @RequestParam("title") String title,
-            @RequestParam("articleText") String articleText,
-            @RequestParam("image") MultipartFile image,
-            @RequestParam("category") int categoryId,
-            @RequestParam("userId") int userId) {
-        newsService.updateArticle(articleId,title, articleText, image, categoryId, userId);
+    public String updateArticle(@ModelAttribute ArticleForm articleForm) {
+        newsService.updateArticle(articleForm.getArticleId(), articleForm.getTitle(), articleForm.getArticleText(),
+                articleForm.getImage(), articleForm.getCategoryId(), articleForm.getUserId());
         return "redirect:/news";
     }
 
