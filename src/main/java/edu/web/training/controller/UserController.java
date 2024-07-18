@@ -1,11 +1,14 @@
 package edu.web.training.controller;
 
+import com.oracle.wls.shaded.org.apache.xpath.operations.Mod;
+import edu.web.training.entity.LoginForm;
 import edu.web.training.entity.User;
 import edu.web.training.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +20,8 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/login")
-    public String goToLoginPage() {
+    public String goToLoginPage(Model model) {
+        model.addAttribute("loginForm", new LoginForm());
         return "login";
     }
 
@@ -27,10 +31,8 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public String authenticateUser(@RequestParam("username") String username,
-                                   @RequestParam("password") String password,
-                                   Model model, HttpSession session) {
-        User user = userService.authenticate(username, password);
+    public String authenticateUser(@ModelAttribute("loginForm") LoginForm loginForm, Model model, HttpSession session) {
+        User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
         if (user != null) {
             session.setAttribute("user", user);
             return "redirect:/";

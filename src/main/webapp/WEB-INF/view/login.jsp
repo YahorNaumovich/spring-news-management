@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page isELIgnored="false" %>
 
@@ -16,21 +16,21 @@
   <body>
     <jsp:include page="/WEB-INF/view/header.jsp" />
     <main class="login-container">
-      <form class="login-form" action="<c:url value='/user/authenticate'/>" method="post">
+      <form:form modelAttribute="loginForm" class="login-form" action="authenticate" method="post">
         <h2>Login</h2>
         <c:if test="${not empty error}">
           <div class="error">${error}</div>
         </c:if>
         <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" required />
+          <form:label path="username">Username</form:label>
+          <form:input path="username" id="username" required="true" />
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" required />
+          <form:label path="password">Password</form:label>
+          <form:password path="password" id="password" required="true" />
         </div>
         <button type="submit" class="login-button">Log In</button>
-      </form>
+      </form:form>
     </main>
   </body>
 </html>
