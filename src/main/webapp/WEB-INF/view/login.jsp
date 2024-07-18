@@ -24,10 +24,12 @@
         <div class="form-group">
           <form:label path="username">Username</form:label>
           <form:input path="username" id="username" required="true" />
+          <form:errors path="username" cssClass="error" />
         </div>
         <div class="form-group">
           <form:label path="password">Password</form:label>
           <form:password path="password" id="password" required="true" />
+          <form:errors path="password" cssClass="error" />
         </div>
         <button type="submit" class="login-button">Log In</button>
       </form:form>

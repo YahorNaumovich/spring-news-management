@@ -1,4 +1,4 @@
-package edu.web.training.entity;
+package edu.web.training.entity.form;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
