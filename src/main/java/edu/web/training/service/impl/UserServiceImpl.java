@@ -22,4 +22,19 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public boolean usernameExists(String username) {
+        return userDao.findByUsername(username) != null;
+    }
+
+    @Override
+    public boolean emailExists(String email) {
+        return userDao.findByEmail(email) != null;
+    }
+
+    @Override
+    public void createUser(User user) {
+        userDao.save(user);
+    }
 }

@@ -24,4 +24,21 @@ public class UserDaoImpl implements UserDao {
             return null; // or handle the exception as needed
         }
     }
+
+    @Override
+    public User findByEmail(String email) {
+        try {
+            return (User) sessionFactory.getCurrentSession()
+                    .createQuery("from User where email = :email")
+                    .setParameter("email", email)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void save(User user) {
+        sessionFactory.getCurrentSession().persist(user);
+    }
 }
