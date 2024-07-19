@@ -18,7 +18,7 @@
 <main class="article-container">
     <form:form class="article-form"
                modelAttribute="articleForm"
-               action="${empty articleForm.articleId ? 'save' : 'update'}"
+               action="${isEditMode ? 'update' : 'save'}"
                method="post"
                enctype="multipart/form-data">
 
@@ -32,11 +32,13 @@
         <div class="form-group">
             <form:label path="title" for="title">Title</form:label>
             <form:input path="title" id="title" type="text" required="true"/>
+            <form:errors path="title" cssClass="error"/>
         </div>
 
         <div class="form-group">
             <form:label path="articleText" for="articleText">Article Text</form:label>
             <form:textarea path="articleText" id="articleText" rows="10" required="true"/>
+            <form:errors path="articleText" cssClass="error"/>
         </div>
 
         <div class="form-group">

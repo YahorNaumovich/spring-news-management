@@ -4,9 +4,11 @@ import edu.web.training.entity.Article;
 import edu.web.training.entity.form.ArticleForm;
 import edu.web.training.entity.Category;
 import edu.web.training.service.NewsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,14 +74,26 @@ public class NewsController {
     }
 
     @PostMapping("/article/save")
-    public String saveArticle(@ModelAttribute ArticleForm articleForm) {
+    public String saveArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            List<Category> categories = newsService.getAllCategories();
+            model.addAttribute("categories", categories);
+            model.addAttribute("isEditMode", false);
+            return "article-form";
+        }
         newsService.saveArticle(articleForm.getTitle(), articleForm.getArticleText(),
                 articleForm.getImage(), articleForm.getCategoryId(), articleForm.getUserId());
         return "redirect:/news";
     }
 
     @PostMapping("/article/update")
-    public String updateArticle(@ModelAttribute ArticleForm articleForm) {
+    public String updateArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            List<Category> categories = newsService.getAllCategories();
+            model.addAttribute("categories", categories);
+            model.addAttribute("isEditMode", true);
+            return "article-form";
+        }
         newsService.updateArticle(articleForm.getArticleId(), articleForm.getTitle(), articleForm.getArticleText(),
                 articleForm.getImage(), articleForm.getCategoryId(), articleForm.getUserId());
         return "redirect:/news";
