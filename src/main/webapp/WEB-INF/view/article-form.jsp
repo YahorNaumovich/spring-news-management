@@ -22,7 +22,7 @@
                method="post"
                enctype="multipart/form-data">
 
-<h2><c:if test="${not isEditMode}">Add</c:if><c:if test="${isEditMode}">Edit</c:if> Article</h2>
+<h2><c:if test="${not isEditMode}"><fmt:message key="articleform.add.title"/></c:if><c:if test="${isEditMode}"><fmt:message key="articleform.edit.title"/></c:if></h2>
 
 
         <c:if test="${not empty error}">
@@ -30,24 +30,24 @@
         </c:if>
 
         <div class="form-group">
-            <form:label path="title" for="title">Title</form:label>
+            <form:label path="title" for="title"><fmt:message key="articleform.title"/></form:label>
             <form:input path="title" id="title" type="text" required="true"/>
             <form:errors path="title" cssClass="error"/>
         </div>
 
         <div class="form-group">
-            <form:label path="articleText" for="articleText">Article Text</form:label>
+            <form:label path="articleText" for="articleText"><fmt:message key="articleform.text"/></form:label>
             <form:textarea path="articleText" id="articleText" rows="10" required="true"/>
             <form:errors path="articleText" cssClass="error"/>
         </div>
 
         <div class="form-group">
-            <form:label path="image" for="image">Image</form:label>
+            <form:label path="image" for="image"><fmt:message key="articleform.image"/></form:label>
             <input type="file" id="image" name="image" accept="image/*"/>
         </div>
 
         <div class="form-group">
-            <form:label path="categoryId" for="category">Category</form:label>
+            <form:label path="categoryId" for="category"><fmt:message key="articleform.category"/></form:label>
             <form:select path="categoryId" id="category" required="true">
                 <form:options items="${categories}" itemValue="id" itemLabel="name"/>
             </form:select>
@@ -59,7 +59,7 @@
 
         <form:hidden path="userId" value="${sessionScope.user.id}"/>
 
-        <button type="submit" class="article-button">Save Article</button>
+        <button type="submit" class="article-button"><fmt:message key="articleform.action"/></button>
     </form:form>
 </main>
 </body>
