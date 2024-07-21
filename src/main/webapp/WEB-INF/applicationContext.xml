@@ -63,7 +63,10 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <!-- Define the validator bean and use the message source for validation messages -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
     <mvc:annotation-driven validator="validator"/>
 
     <!-- Enable configuration of transactional behavior based on annotations -->

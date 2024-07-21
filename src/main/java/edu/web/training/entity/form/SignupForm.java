@@ -7,23 +7,23 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-@PasswordsMatch(message = "Password and Confirm Password must match")
+@PasswordsMatch(message = "{signup-form.passwords.match}")
 public class SignupForm {
 
-    @NotEmpty(message = "Username cannot be empty")
-    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
+    @NotEmpty(message = "{signup-form.username.required}")
+    @Size(min = 3, max = 20, message = "{signup-form.username.size}")
     private String username;
 
-    @NotEmpty(message = "Email cannot be empty")
-    @Email(message = "Invalid email address")
+    @NotEmpty(message = "{signup-form.email.required}")
+    @Email(message = "{signup-form.email.invalid}")
     private String email;
 
-    @NotEmpty(message = "Password cannot be empty")
-    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
+    @NotEmpty(message = "{signup-form.password.required}")
+    @Size(min = 6, max = 20, message = "{signup-form.password.size}")
     private String password;
 
-    @NotEmpty(message = "Confirm Password cannot be empty")
-    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
+    @NotEmpty(message = "{signup-form.confirmPassword.required}")
+    @Size(min = 6, max = 20, message = "{signup-form.password.size}")
     private String confirmPassword;
 
 }
