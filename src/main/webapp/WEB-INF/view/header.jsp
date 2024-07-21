@@ -27,6 +27,6 @@
         <a href="<c:url value='/user/signup'/>"><fmt:message key="header.signup"/></a>
       </c:otherwise>
     </c:choose>
-    <a href="?lang=en">En</a> | <a href="?lang=ru">Ru</a>
+    <a href="?lang=en"><fmt:message key="loc.en"/></a> | <a href="?lang=ru"><fmt:message key="loc.ru"/></a>
   </div>
 </header>
