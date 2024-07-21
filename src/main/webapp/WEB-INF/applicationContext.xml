@@ -5,14 +5,14 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="
-		http://www.springframework.org/schema/beans
-		http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context
-		http://www.springframework.org/schema/context/spring-context.xsd
-		http://www.springframework.org/schema/mvc
-		http://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/tx
-		http://www.springframework.org/schema/tx/spring-tx.xsd">
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- Add support for component scanning -->
     <context:component-scan base-package="edu.web.training" />
@@ -66,26 +66,30 @@
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
     <mvc:annotation-driven validator="validator"/>
 
-
     <!-- Enable configuration of transactional behavior based on annotations -->
     <tx:annotation-driven transaction-manager="myTransactionManager" />
 
     <!-- Add support for reading web resources: css, images, js, etc ... -->
-    <mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+    <mvc:resources location="/resources/" mapping="/resources/**"/>
+    <mvc:resources location="/images/" mapping="/images/**"/>
 
-    <mvc:resources location="/images/" mapping="/images/**" />
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
 
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+    </bean>
 
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang"/>
+    </bean>
 
+    <!-- Register interceptors -->
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="lang"/>
+        </bean>
+    </mvc:interceptors>
 </beans>
-
-
-
-
-
-
-
-
-
-
-

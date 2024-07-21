@@ -1,14 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page isELIgnored="false" %>
 
 <header class="header">
   <div class="header-left">
-    <a href="<c:url value='/'/>">Home</a>
+    <a href="<c:url value='/'/>"><fmt:message key="header.home"/></a>
     <div class="dropdown">
-      <a href="#" class="dropbtn">Categories</a>
+      <a href="#" class="dropbtn"><fmt:message key="header.categories"/></a>
       <div class="dropdown-content">
         <a href="<c:url value='/news'/>">All</a>
         <c:forEach var="category" items="${categories}">
@@ -21,12 +20,13 @@
     <c:choose>
       <c:when test="${not empty sessionScope.user}">
         <a href="<c:url value='/profile'/>">${sessionScope.user.username}</a>
-        <a href="<c:url value='/user/logout'/>">Log out</a>
+        <a href="<c:url value='/user/logout'/>"><fmt:message key="header.logout"/></a>
       </c:when>
       <c:otherwise>
-        <a href="<c:url value='/user/login'/>">Log in</a>
-        <a href="<c:url value='/user/signup'/>">Sign up</a>
+        <a href="<c:url value='/user/login'/>"><fmt:message key="header.login"/></a>
+        <a href="<c:url value='/user/signup'/>"><fmt:message key="header.signup"/></a>
       </c:otherwise>
     </c:choose>
+    <a href="?lang=en">En</a> | <a href="?lang=ru">Ru</a>
   </div>
 </header>
