@@ -18,38 +18,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
+    private static final String LOGIN_PAGE = "login";
+    private static final String SIGNUP_PAGE = "signup";
+    private static final String REDIRECT_HOME = "redirect:/";
+    private static final String ERROR_ATTRIBUTE = "error";
+    private static final String LOGIN_FORM_ATTRIBUTE = "loginForm";
+    private static final String SIGNUP_FORM_ATTRIBUTE = "signupForm";
+    private static final String USER_ATTRIBUTE = "user";
+    private static final String DEFAULT_ROLE_NAME = "viewer";
+    private static final int DEFAULT_ROLE_ID = 3;
     @Autowired
     private UserService userService;
 
     @RequestMapping("/login")
     public String goToLoginPage(Model model) {
-        model.addAttribute("loginForm", new LoginForm());
-        return "login";
+        model.addAttribute(LOGIN_FORM_ATTRIBUTE, new LoginForm());
+        return LOGIN_PAGE;
     }
 
     @RequestMapping("/signup")
     public String goToSignUpPage(Model model) {
-        model.addAttribute("signupForm", new SignupForm());
-        return "signup";
+        model.addAttribute(SIGNUP_FORM_ATTRIBUTE, new SignupForm());
+        return SIGNUP_PAGE;
     }
 
     @RequestMapping("/create")
-    public String createUser(@Valid @ModelAttribute("signupForm") SignupForm signupForm, BindingResult bindingResult, Model model) {
+    public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "signup";
+            return SIGNUP_PAGE;
         }
 
         boolean usernameExists = userService.usernameExists(signupForm.getUsername());
         boolean emailExists = userService.emailExists(signupForm.getEmail());
 
         if (usernameExists) {
-            model.addAttribute("error", "Username is already taken");
-            return "signup";
+            model.addAttribute(ERROR_ATTRIBUTE, "Username is already taken");
+            return SIGNUP_PAGE;
         }
 
         if (emailExists) {
-            model.addAttribute("error", "Email is already registered");
-            return "signup";
+            model.addAttribute(ERROR_ATTRIBUTE, "Email is already registered");
+            return SIGNUP_PAGE;
         }
 
         // Create a new user
@@ -58,35 +68,35 @@ public class UserController {
         newUser.setEmail(signupForm.getEmail());
         newUser.setPassword(signupForm.getPassword());
         UserRole defaultRole = new UserRole();
-        defaultRole.setId(3);
-        defaultRole.setName("viewer");
+        defaultRole.setId(DEFAULT_ROLE_ID);
+        defaultRole.setName(DEFAULT_ROLE_NAME);
         newUser.setUserRole(defaultRole);
 
         userService.createUser(newUser);
 
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
     @PostMapping("/authenticate")
-    public String authenticateUser(@Valid @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, Model model, HttpSession session) {
+    public String authenticateUser(@Valid @ModelAttribute(LOGIN_FORM_ATTRIBUTE) LoginForm loginForm, BindingResult bindingResult, Model model, HttpSession session) {
 
         if (bindingResult.hasErrors()) {
-            return "login";
+            return LOGIN_PAGE;
         }
 
         User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
         if (user == null) {
-            model.addAttribute("error", "Invalid username or password");
-            return "login";
+            model.addAttribute(ERROR_ATTRIBUTE, "Invalid username or password");
+            return LOGIN_PAGE;
         }
-        session.setAttribute("user", user);
-        return "redirect:/";
+        session.setAttribute(USER_ATTRIBUTE, user);
+        return REDIRECT_HOME;
 
     }
 
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 }
