@@ -19,7 +19,7 @@
         <c:choose>
             <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin' || sessionScope.user.userRole.name == 'Editor')}">
                 <div class="add-article-link">
-                    <a href="<c:url value='/article/add'/>" class="button">Add article</a>
+                    <a href="<c:url value='/article/add'/>" class="button"><fmt:message key="news.add"/></a>
                 </div>
             </c:when>
         </c:choose>
