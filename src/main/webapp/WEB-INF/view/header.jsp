@@ -3,6 +3,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page isELIgnored="false" %>
 
+<%
+    // Extract the query string and parameters
+    String queryString = request.getQueryString();
+    String queryParams = "";
+    if (queryString != null && !queryString.isEmpty()) {
+        queryParams = queryString.replaceAll("(^|&)?lang=[^&]*", "").replaceAll("^&", "");
+        if (!queryParams.isEmpty()) {
+            queryParams = "&" + queryParams;
+        }
+    }
+%>
+
 <header class="header">
   <div class="header-left">
     <a href="<c:url value='/'/>"><fmt:message key="header.home"/></a>
@@ -27,6 +39,6 @@
         <a href="<c:url value='/user/signup'/>"><fmt:message key="header.signup"/></a>
       </c:otherwise>
     </c:choose>
-    <a href="?lang=en"><fmt:message key="loc.en"/></a> | <a href="?lang=ru"><fmt:message key="loc.ru"/></a>
+    <a href="?lang=en<%= queryParams %>"><fmt:message key="loc.en"/></a> | <a href="?lang=ru<%= queryParams %>"><fmt:message key="loc.ru"/></a>
   </div>
 </header>
