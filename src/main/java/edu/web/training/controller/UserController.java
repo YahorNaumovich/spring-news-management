@@ -39,18 +39,23 @@ public class UserController {
 
     @RequestMapping("/login")
     public String goToLoginPage(Model model) {
+
         model.addAttribute(LOGIN_FORM_ATTRIBUTE, new LoginForm());
+
         return LOGIN_PAGE;
     }
 
     @RequestMapping("/signup")
     public String goToSignUpPage(Model model) {
+
         model.addAttribute(SIGNUP_FORM_ATTRIBUTE, new SignupForm());
+
         return SIGNUP_PAGE;
     }
 
     @RequestMapping("/create")
     public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model, Locale locale) {
+
         if (bindingResult.hasErrors()) {
             return SIGNUP_PAGE;
         }
@@ -91,18 +96,25 @@ public class UserController {
         }
 
         User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
+
         if (user == null) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.invalid.credentials", null, locale));
+
             return LOGIN_PAGE;
         }
+
         session.setAttribute(USER_ATTRIBUTE, user);
+
         return REDIRECT_HOME;
 
     }
 
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
+
         session.invalidate();
+
         return REDIRECT_HOME;
     }
 }
