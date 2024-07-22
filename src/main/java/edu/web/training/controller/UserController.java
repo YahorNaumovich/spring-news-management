@@ -8,12 +8,15 @@ import edu.web.training.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Locale;
 
 @Controller
 @RequestMapping("/user")
@@ -31,6 +34,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @RequestMapping("/login")
     public String goToLoginPage(Model model) {
         model.addAttribute(LOGIN_FORM_ATTRIBUTE, new LoginForm());
@@ -44,7 +50,7 @@ public class UserController {
     }
 
     @RequestMapping("/create")
-    public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model) {
+    public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model, Locale locale) {
         if (bindingResult.hasErrors()) {
             return SIGNUP_PAGE;
         }
@@ -53,12 +59,12 @@ public class UserController {
         boolean emailExists = userService.emailExists(signupForm.getEmail());
 
         if (usernameExists) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Username is already taken");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.username.taken", null, locale));
             return SIGNUP_PAGE;
         }
 
         if (emailExists) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Email is already registered");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.email.registered", null, locale));
             return SIGNUP_PAGE;
         }
 
@@ -78,7 +84,7 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public String authenticateUser(@Valid @ModelAttribute(LOGIN_FORM_ATTRIBUTE) LoginForm loginForm, BindingResult bindingResult, Model model, HttpSession session) {
+    public String authenticateUser(@Valid @ModelAttribute(LOGIN_FORM_ATTRIBUTE) LoginForm loginForm, BindingResult bindingResult, Model model, HttpSession session, Locale locale) {
 
         if (bindingResult.hasErrors()) {
             return LOGIN_PAGE;
@@ -86,7 +92,7 @@ public class UserController {
 
         User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
         if (user == null) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Invalid username or password");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.invalid.credentials", null, locale));
             return LOGIN_PAGE;
         }
         session.setAttribute(USER_ATTRIBUTE, user);
