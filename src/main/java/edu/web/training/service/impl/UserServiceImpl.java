@@ -16,10 +16,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User authenticate(String username, String password) {
+
         User user = userDao.findByUsername(username);
+
         if (user != null && user.getPassword().equals(password)) {
+
             return user;
+
         }
+
         return null;
     }
 

@@ -52,13 +52,10 @@ public class NewsDaoImpl implements NewsDao {
     @Override
     public void saveArticle(String title, String articleText, String filePath, int categoryId, int userId) {
 
-
-        // Create and save ArticleText entity
         ArticleText text = new ArticleText();
         text.setText(articleText);
         sessionFactory.getCurrentSession().persist(text);
 
-        // Create Article entity and set properties
         Article article = new Article();
         article.setTitle(title);
         article.setArticleText(text);
@@ -72,7 +69,6 @@ public class NewsDaoImpl implements NewsDao {
                 .getCurrentSession()
                 .get(User.class, userId));
 
-        // Save Article entity
         sessionFactory
                 .getCurrentSession()
                 .persist(article);
@@ -80,7 +76,9 @@ public class NewsDaoImpl implements NewsDao {
 
     @Override
     public void updateArticleWithoutImage(int articleId, String title, String articleText, int categoryId, int userId) {
+
         Article article = getArticleById(articleId);
+
         if (article != null) {
             article.setTitle(title);
             article.getArticleText().setText(articleText);
@@ -91,7 +89,9 @@ public class NewsDaoImpl implements NewsDao {
 
     @Override
     public void updateArticle(int articleId, String title, String articleText, String relativePath, int categoryId, int userId) {
+
         Article article = getArticleById(articleId);
+
         if (article != null) {
             article.setTitle(title);
             article.getArticleText().setText(articleText);
@@ -103,7 +103,9 @@ public class NewsDaoImpl implements NewsDao {
 
     @Override
     public void deleteArticle(int id) {
+
         Article article = getArticleById(id);
+
         if (article != null) {
             sessionFactory
                     .getCurrentSession()
