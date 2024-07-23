@@ -20,9 +20,6 @@ public class NewsServiceImpl implements NewsService {
     @Autowired
     private NewsDao newsDao;
 
-    @Autowired
-    private ServletContext servletContext;
-
     @Override
     public List<Article> getAllArticles() {
         return newsDao.getAllArticles();
@@ -44,58 +41,25 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void saveArticle(String title, String articleText, MultipartFile image, int categoryId, int userId) {
+    public void saveArticle(String title, String articleText, String imagePath, int categoryId, int userId) {
 
-        String uploadPath = servletContext.getRealPath("/images");
-        String filePath = uploadPath + File.separator + image.getOriginalFilename();
+        newsDao.saveArticle(title, articleText, imagePath, categoryId, userId);
 
-        File dest = new File(filePath);
-
-        try {
-
-            image.transferTo(dest);
-
-        } catch (IOException e) {
-
-            throw new RuntimeException(e);
-
-        }
-
-        String relativePath = "/images/" + image.getOriginalFilename();
-
-        System.out.println(relativePath);
-
-        newsDao.saveArticle(title, articleText, relativePath, categoryId, userId);
     }
 
     @Override
-    public void updateArticle(int articleId, String title, String articleText, MultipartFile image, int categoryId, int userId) {
+    public void updateArticle(int articleId, String title, String articleText, String imagePath, int categoryId, int userId) {
 
-        if (image.isEmpty()) {
+        newsDao.updateArticle(articleId, title, articleText, imagePath, categoryId, userId);
 
-            newsDao.updateArticleWithoutImage(articleId, title, articleText, categoryId, userId);
+    }
 
-        } else {
 
-            String uploadPath = servletContext.getRealPath("/images");
-            String filePath = uploadPath + File.separator + image.getOriginalFilename();
+    @Override
+    public void updateArticleWithoutImage(int articleId, String title, String articleText, int categoryId, int userId) {
 
-            File dest = new File(filePath);
+        newsDao.updateArticleWithoutImage(articleId, title, articleText, categoryId, userId);
 
-            try {
-
-                image.transferTo(dest);
-
-            } catch (IOException e) {
-
-                throw new RuntimeException(e);
-
-            }
-
-            String relativePath = "/images/" + image.getOriginalFilename();
-
-            newsDao.updateArticle(articleId, title, articleText, relativePath, categoryId, userId);
-        }
     }
 
     @Override

@@ -15,9 +15,11 @@ public interface NewsService {
 
     List<Article> getArticlesByCategory(int categoryId);
 
-    void saveArticle(String title, String articleText, MultipartFile image, int categoryId, int userId);
+    void saveArticle(String title, String articleText, String imagePath, int categoryId, int userId);
 
-    void updateArticle(int articleId ,String title, String articleText, MultipartFile image, int categoryId, int userId);
+    void updateArticle(int articleId, String title, String articleText, String imagePath, int categoryId, int userId);
+
+    void updateArticleWithoutImage(int articleId, String title, String articleText, int categoryId, int userId);
 
     void deleteArticle(int id);
 }

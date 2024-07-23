@@ -4,6 +4,7 @@ import edu.web.training.entity.Article;
 import edu.web.training.entity.form.ArticleForm;
 import edu.web.training.entity.Category;
 import edu.web.training.service.NewsService;
+import jakarta.servlet.ServletContext;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -28,9 +32,13 @@ public class NewsController {
     private static final String CATEGORIES_ATTRIBUTE = "categories";
     private static final String ARTICLE_FORM_ATTRIBUTE = "articleForm";
     private static final String IS_EDIT_MODE_ATTRIBUTE = "isEditMode";
+    private static final String IMAGES_DIRECTORY = "/images";
 
     @Autowired
     private NewsService newsService;
+
+    @Autowired
+    private ServletContext servletContext;
 
     @RequestMapping("/")
     public String redirectToMainPage() {
@@ -109,8 +117,10 @@ public class NewsController {
             return ARTICLE_FORM_PAGE;
         }
 
+        String relativePath = handleImageUpload(articleForm.getImage());
+
         newsService.saveArticle(articleForm.getTitle(), articleForm.getArticleText(),
-                articleForm.getImage(), articleForm.getCategoryId(), articleForm.getUserId());
+                relativePath, articleForm.getCategoryId(), articleForm.getUserId());
 
         return REDIRECT_NEWS;
     }
@@ -127,8 +137,19 @@ public class NewsController {
             return ARTICLE_FORM_PAGE;
         }
 
-        newsService.updateArticle(articleForm.getArticleId(), articleForm.getTitle(), articleForm.getArticleText(),
-                articleForm.getImage(), articleForm.getCategoryId(), articleForm.getUserId());
+        if (articleForm.getImage().isEmpty()) {
+
+            newsService.updateArticleWithoutImage(articleForm.getArticleId(), articleForm.getTitle(), articleForm.getArticleText(), articleForm.getCategoryId(), articleForm.getUserId());
+            return REDIRECT_NEWS;
+
+        } else {
+
+            String relativePath = handleImageUpload(articleForm.getImage());
+
+            newsService.updateArticle(articleForm.getArticleId(), articleForm.getTitle(), articleForm.getArticleText(),
+                    relativePath, articleForm.getCategoryId(), articleForm.getUserId());
+
+        }
 
         return REDIRECT_NEWS;
     }
@@ -140,5 +161,25 @@ public class NewsController {
 
         return REDIRECT_NEWS;
 
+    }
+
+    private String handleImageUpload(MultipartFile image) {
+
+        if (image.isEmpty()) {
+            return null;
+        }
+
+        String uploadPath = servletContext.getRealPath(IMAGES_DIRECTORY);
+        String filePath = uploadPath + File.separator + image.getOriginalFilename();
+
+        File dest = new File(filePath);
+
+        try {
+            image.transferTo(dest);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
+
+        return IMAGES_DIRECTORY + "/" + image.getOriginalFilename();
     }
 }
