@@ -91,12 +91,7 @@ public class NewsController {
         List<Category> categories = newsService.getAllCategories();
         Article article = newsService.getArticleById(id);
 
-        ArticleForm articleForm = new ArticleForm();
-        articleForm.setArticleId(article.getId());
-        articleForm.setTitle(article.getTitle());
-        articleForm.setArticleText(article.getArticleText().getText());
-        articleForm.setCategoryId(article.getCategory().getId());
-        articleForm.setUserId(article.getUser().getId());
+        ArticleForm articleForm = new ArticleForm(article.getId(), article.getTitle(), article.getArticleText().getText(), null, article.getCategory().getId(), article.getUser().getId());
 
         model.addAttribute(ARTICLE_FORM_ATTRIBUTE, articleForm);
         model.addAttribute(CATEGORIES_ATTRIBUTE, categories);

@@ -2,10 +2,14 @@ package edu.web.training.entity.form;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ArticleForm {
 
     private int articleId; // For update only
