@@ -71,8 +71,8 @@ public class SecurityConfig {
 
     private ClientRegistration googleClientRegistration() {
         return CommonOAuth2Provider.GOOGLE.getBuilder("google")
-                .clientId("")
-                .clientSecret("")
+                .clientId("client-id-placeholder")
+                .clientSecret("client-secret-placeholder")
                 .scope("openid", "profile", "email")
                 .build();
     }
