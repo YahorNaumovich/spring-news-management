@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +33,9 @@ public class UserController {
     private static final String USER_ATTRIBUTE = "user";
     private static final String DEFAULT_ROLE_NAME = "viewer";
     private static final int DEFAULT_ROLE_ID = 3;
+
+    private static final String REDIRECT_NEWS = "redirect:/news";
+
     @Autowired
     private UserService userService;
 
@@ -45,69 +50,28 @@ public class UserController {
         return LOGIN_PAGE;
     }
 
-    @RequestMapping("/signup")
-    public String goToSignUpPage(Model model) {
+    @RequestMapping("/authenticate")
+    public String authenticate(Authentication authentication, HttpSession session) {
 
-        model.addAttribute(SIGNUP_FORM_ATTRIBUTE, new SignupForm());
+        OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
 
-        return SIGNUP_PAGE;
-    }
+        boolean userExists = userService.emailExists(oauth2User.getAttribute("email"));
 
-    @RequestMapping("/create")
-    public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model, Locale locale) {
+        User user;
 
-        if (bindingResult.hasErrors()) {
-            return SIGNUP_PAGE;
-        }
-
-        boolean usernameExists = userService.usernameExists(signupForm.getUsername());
-        boolean emailExists = userService.emailExists(signupForm.getEmail());
-
-        if (usernameExists) {
-            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.username.taken", null, locale));
-            return SIGNUP_PAGE;
-        }
-
-        if (emailExists) {
-            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.email.registered", null, locale));
-            return SIGNUP_PAGE;
-        }
-
-        // Create a new user
-        User newUser = new User();
-        newUser.setUsername(signupForm.getUsername());
-        newUser.setEmail(signupForm.getEmail());
-        newUser.setPassword(signupForm.getPassword());
-        UserRole defaultRole = new UserRole();
-        defaultRole.setId(DEFAULT_ROLE_ID);
-        defaultRole.setName(DEFAULT_ROLE_NAME);
-        newUser.setUserRole(defaultRole);
-
-        userService.createUser(newUser);
-
-        return REDIRECT_HOME;
-    }
-
-    @PostMapping("/authenticate")
-    public String authenticateUser(@Valid @ModelAttribute(LOGIN_FORM_ATTRIBUTE) LoginForm loginForm, BindingResult bindingResult, Model model, HttpSession session, Locale locale) {
-
-        if (bindingResult.hasErrors()) {
-            return LOGIN_PAGE;
-        }
-
-        User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
-
-        if (user == null) {
-
-            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.invalid.credentials", null, locale));
-
-            return LOGIN_PAGE;
+        if (!userExists) {
+            user = new User();
+            user.setUsername(oauth2User.getAttribute("name"));
+            user.setEmail(oauth2User.getAttribute("email"));
+            user.setUserRole(new UserRole(DEFAULT_ROLE_ID, DEFAULT_ROLE_NAME));
+            userService.createUser(user);
+        } else {
+            user = userService.findByEmail(oauth2User.getAttribute("email"));
         }
 
         session.setAttribute(USER_ATTRIBUTE, user);
 
-        return REDIRECT_HOME;
-
+        return REDIRECT_NEWS;
     }
 
     @RequestMapping("/logout")

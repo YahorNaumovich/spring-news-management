@@ -36,7 +36,6 @@
       </c:when>
       <c:otherwise>
         <a href="<c:url value='/user/login'/>"><fmt:message key="header.login"/></a>
-        <a href="<c:url value='/user/signup'/>"><fmt:message key="header.signup"/></a>
       </c:otherwise>
     </c:choose>
     <a href="?lang=en<%= queryParams %>"><fmt:message key="loc.en"/></a> | <a href="?lang=ru<%= queryParams %>"><fmt:message key="loc.ru"/></a>

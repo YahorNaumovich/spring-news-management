@@ -16,23 +16,7 @@
   <body>
     <jsp:include page="/WEB-INF/view/header.jsp" />
     <main class="login-container">
-      <form:form modelAttribute="loginForm" class="login-form" action="authenticate" method="post">
-        <h2><fmt:message key="login.title"/></h2>
-        <c:if test="${not empty error}">
-          <div class="error">${error}</div>
-        </c:if>
-        <div class="form-group">
-          <form:label path="username"><fmt:message key="login.username"/></form:label>
-          <form:input path="username" id="username" required="true" />
-          <form:errors path="username" cssClass="error" />
-        </div>
-        <div class="form-group">
-          <form:label path="password"><fmt:message key="login.password"/></form:label>
-          <form:password path="password" id="password" required="true" />
-          <form:errors path="password" cssClass="error" />
-        </div>
-        <button type="submit" class="login-button"><fmt:message key="login.action"/></button>
-      </form:form>
+ <a href="<c:url value='/oauth2/authorization/google'/>">Sign in with Google</a>
     </main>
   </body>
 </html>

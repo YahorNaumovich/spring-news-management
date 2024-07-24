@@ -95,4 +95,6 @@
             <property name="paramName" value="lang"/>
         </bean>
     </mvc:interceptors>
+    <!-- Define your beans here -->
+    <bean class="edu.web.training.config.SecurityConfig"/>
 </beans>
