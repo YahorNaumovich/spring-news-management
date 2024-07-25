@@ -16,13 +16,39 @@
     <jsp:include page="/WEB-INF/view/header.jsp" />
 
     <main class="main-content">
-        <c:choose>
-            <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin' || sessionScope.user.userRole.name == 'Editor')}">
-                <div class="add-article-link">
-                    <a href="<c:url value='/article/add'/>" class="button"><fmt:message key="news.add"/></a>
+        <div class="news-header">
+                    <c:choose>
+                        <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin' || sessionScope.user.userRole.name == 'Editor')}">
+                            <div class="add-article-link">
+                                <a href="<c:url value='/article/add'/>" class="button"><fmt:message key="news.add"/></a>
+                            </div>
+                        </c:when>
+                    </c:choose>
+            <div class="dropdown">
+            <fmt:message key="header.categories"/>:
+                <a href="#" class="dropbtn">
+                    <c:choose>
+                        <c:when test="${param.category != null}">
+                            <c:forEach var="category" items="${categories}">
+                                <c:if test="${category.id == param.category}">
+                                    ${category.name}
+                                </c:if>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            All
+                        </c:otherwise>
+                    </c:choose>
+                </a>
+                <div class="dropdown-content">
+                    <a href="<c:url value='/news'/>">All</a>
+                    <c:forEach var="category" items="${categories}">
+                        <a href="<c:url value='/news?category=${category.id}'/>">${category.name}</a>
+                    </c:forEach>
                 </div>
-            </c:when>
-        </c:choose>
+            </div>
+        </div>
+
         <div class="news-container">
             <c:forEach var="article" items="${articles}">
                 <a href="<c:url value='/article?id=${article.id}'/>" class="news-article">
@@ -40,3 +66,4 @@
     </main>
 </body>
 </html>
+

@@ -18,15 +18,6 @@
 <header class="header">
   <div class="header-left">
     <a href="<c:url value='/'/>"><fmt:message key="header.home"/></a>
-    <div class="dropdown">
-      <a href="#" class="dropbtn"><fmt:message key="header.categories"/></a>
-      <div class="dropdown-content">
-        <a href="<c:url value='/news'/>">All</a>
-        <c:forEach var="category" items="${categories}">
-          <a href="<c:url value='/news?category=${category.id}'/>">${category.name}</a>
-        </c:forEach>
-      </div>
-    </div>
   </div>
   <div class="header-right">
     <c:choose>
