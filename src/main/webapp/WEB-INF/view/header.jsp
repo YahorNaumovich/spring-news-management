@@ -18,7 +18,11 @@
 <header class="header">
   <div class="header-left">
     <a href="<c:url value='/'/>"><fmt:message key="header.home"/></a>
-    <a href="<c:url value='/user/manage'/>"><fmt:message key="header.manage-users"/></a>
+        <c:choose>
+            <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin')}">
+                <a href="<c:url value='/user/manage'/>"><fmt:message key="header.manage-users"/></a>
+            </c:when>
+        </c:choose>
   </div>
   <div class="header-right">
     <c:choose>
