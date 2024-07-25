@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @RequestMapping("/manage")
-    public String goToUserManagementPage(Model model) {
+    public String goToUserManagementPage(Model model, Locale locale) {
         try {
             List<User> users = userService.getAllUsers();
             model.addAttribute(USERS_ATTRIBUTE, users);
@@ -81,7 +81,7 @@ public class UserController {
 
             return USER_MANAGEMENT_PAGE;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to load user management data");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.user-management", null, locale));
             return USER_MANAGEMENT_PAGE;
         }
     }
@@ -120,7 +120,7 @@ public class UserController {
 
             return REDIRECT_HOME;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to create user");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.create", null, locale));
             return SIGNUP_PAGE;
         }
     }
@@ -142,19 +142,19 @@ public class UserController {
             session.setAttribute(USER_ATTRIBUTE, user);
             return REDIRECT_HOME;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to authenticate user");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.authenticate", null, locale));
             return LOGIN_PAGE;
         }
     }
 
     @RequestMapping("/update-role")
-    public String updateUserRole(@RequestParam("id") int userId, @RequestParam("roleId") int roleId, Model model) {
+    public String updateUserRole(@RequestParam("id") int userId, @RequestParam("roleId") int roleId, Model model, Locale locale) {
         try {
             userService.updateUserRole(userId, roleId);
             return "redirect:/user/manage";
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to update user role");
-            return "redirect:/user/manage";
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.update-role", null, locale));
+            return USER_MANAGEMENT_PAGE;
         }
     }
 

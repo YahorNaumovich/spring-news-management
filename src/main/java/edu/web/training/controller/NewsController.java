@@ -8,6 +8,7 @@ import edu.web.training.service.NewsService;
 import jakarta.servlet.ServletContext;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class NewsController {
@@ -43,13 +45,16 @@ public class NewsController {
     @Autowired
     private ServletContext servletContext;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @RequestMapping("/")
     public String redirectToMainPage() {
         return REDIRECT_NEWS;
     }
 
     @RequestMapping("/news")
-    public String showAllNews(@RequestParam(value = "category", required = false) Integer categoryId, Model model) {
+    public String showAllNews(@RequestParam(value = "category", required = false) Integer categoryId, Model model, Locale locale) {
         try {
             List<Article> articles;
 
@@ -65,25 +70,25 @@ public class NewsController {
 
             return NEWS_PAGE;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to load news");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.news.load", null, locale));
             return NEWS_PAGE;
         }
     }
 
     @RequestMapping("/article")
-    public String showArticle(@RequestParam("id") int id, Model model) {
+    public String showArticle(@RequestParam("id") int id, Model model, Locale locale) {
         try {
             Article article = newsService.getArticleById(id);
             model.addAttribute(ARTICLE_ATTRIBUTE, article);
             return ARTICLE_PAGE;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to load article");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.load", null, locale));
             return NEWS_PAGE;
         }
     }
 
     @RequestMapping("/article/add")
-    public String goToArticleForm(Model model) {
+    public String goToArticleForm(Model model, Locale locale) {
         try {
             List<Category> categories = newsService.getAllCategories();
             model.addAttribute(ARTICLE_FORM_ATTRIBUTE, new ArticleForm());
@@ -91,13 +96,13 @@ public class NewsController {
             model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, false);
             return ARTICLE_FORM_PAGE;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to load article form");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article-form.load", null, locale));
             return NEWS_PAGE;
         }
     }
 
     @RequestMapping("/article/edit")
-    public String goToArticleEditForm(@RequestParam("id") int id, Model model) {
+    public String goToArticleEditForm(@RequestParam("id") int id, Model model, Locale locale) {
         try {
             List<Category> categories = newsService.getAllCategories();
             Article article = newsService.getArticleById(id);
@@ -109,13 +114,13 @@ public class NewsController {
             model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, true);
             return ARTICLE_FORM_PAGE;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to load article edit form");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.edit-article-form.load", null, locale));
             return NEWS_PAGE;
         }
     }
 
     @PostMapping("/article/save")
-    public String saveArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model) {
+    public String saveArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model, Locale locale) {
         if (bindingResult.hasErrors()) {
             try {
                 List<Category> categories = newsService.getAllCategories();
@@ -123,7 +128,7 @@ public class NewsController {
                 model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, false);
                 return ARTICLE_FORM_PAGE;
             } catch (ServiceException e) {
-                model.addAttribute(ERROR_ATTRIBUTE, "Failed to load categories");
+                model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.categories.load", null, locale));
                 return ARTICLE_FORM_PAGE;
             }
         }
@@ -134,13 +139,13 @@ public class NewsController {
                     relativePath, articleForm.getCategoryId(), articleForm.getUserId());
             return REDIRECT_NEWS;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to save article");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.save", null, locale));
             return ARTICLE_FORM_PAGE;
         }
     }
 
     @PostMapping("/article/update")
-    public String updateArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model) {
+    public String updateArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model, Locale locale) {
         if (bindingResult.hasErrors()) {
             try {
                 List<Category> categories = newsService.getAllCategories();
@@ -148,7 +153,7 @@ public class NewsController {
                 model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, true);
                 return ARTICLE_FORM_PAGE;
             } catch (ServiceException e) {
-                model.addAttribute(ERROR_ATTRIBUTE, "Failed to load categories");
+                model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.categories.load", null, locale));
                 return ARTICLE_FORM_PAGE;
             }
         }
@@ -163,19 +168,19 @@ public class NewsController {
             }
             return REDIRECT_NEWS;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to update article");
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.update", null, locale));
             return ARTICLE_FORM_PAGE;
         }
     }
 
     @RequestMapping("/article/delete")
-    public String deleteArticle(@RequestParam("id") int id,Model model) {
+    public String deleteArticle(@RequestParam("id") int id, Model model, Locale locale) {
         try {
             newsService.deleteArticle(id);
             return REDIRECT_NEWS;
         } catch (ServiceException e) {
-            model.addAttribute(ERROR_ATTRIBUTE, "Failed to delete article");
-            return REDIRECT_NEWS;
+            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.delete", null, locale));
+            return NEWS_PAGE;
         }
     }
 
