@@ -56,4 +56,9 @@ public class UserServiceImpl implements UserService {
         return userDao.findAllRoles();
     }
 
+    @Override
+    public void updateUserRole(int userId, int roleId) {
+        userDao.updateUserRole(userId, roleId);
+    }
+
 }

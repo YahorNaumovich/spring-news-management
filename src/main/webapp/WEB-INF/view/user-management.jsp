@@ -37,11 +37,11 @@
               <td>${user.email}</td>
               <td>${user.username}</td>
               <td>
-                <form action="updateRole" method="post">
+                <form action=<c:url value='/user/update-role'/> method="post">
                   <input type="hidden" name="id" value="${user.id}" />
-                  <select name="role" onchange="submitFormOnRoleChange(this)">
+                  <select name="roleId" onchange="submitFormOnRoleChange(this)">
                     <c:forEach var="role" items="${roles}">
-                      <option value="${role}" ${role eq user.userRole ? 'selected="selected"' : ''}>
+                      <option value="${role.id}" ${role eq user.userRole ? 'selected="selected"' : ''}>
                         ${role.name}
                       </option>
                     </c:forEach>

@@ -134,6 +134,14 @@ public class UserController {
 
     }
 
+    @RequestMapping("/update-role")
+    public String updateUserRole(@RequestParam("id") int userId, @RequestParam("roleId") int roleId){
+
+        userService.updateUserRole(userId, roleId);
+
+        return "redirect:/user/manage";
+    }
+
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
 

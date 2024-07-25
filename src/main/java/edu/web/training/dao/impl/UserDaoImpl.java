@@ -65,4 +65,15 @@ public class UserDaoImpl implements UserDao {
         return sessionFactory.getCurrentSession().createQuery("from UserRole", UserRole.class).getResultList();
     }
 
+    @Override
+    public void updateUserRole(int userId, int roleId) {
+
+        User user = sessionFactory.getCurrentSession().get(User.class, userId);
+        UserRole userRole = sessionFactory.getCurrentSession().get(UserRole.class, roleId);
+
+        user.setUserRole(userRole);
+
+        sessionFactory.getCurrentSession().merge(user);
+    }
+
 }
