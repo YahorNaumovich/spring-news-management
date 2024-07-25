@@ -18,6 +18,7 @@
 <header class="header">
   <div class="header-left">
     <a href="<c:url value='/'/>"><fmt:message key="header.home"/></a>
+    <a href="<c:url value='/user/manage'/>"><fmt:message key="header.manage-users"/></a>
   </div>
   <div class="header-right">
     <c:choose>

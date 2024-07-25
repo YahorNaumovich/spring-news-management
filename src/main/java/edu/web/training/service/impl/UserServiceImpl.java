@@ -2,10 +2,13 @@ package edu.web.training.service.impl;
 
 import edu.web.training.dao.UserDao;
 import edu.web.training.entity.User;
+import edu.web.training.entity.UserRole;
 import edu.web.training.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -42,4 +45,15 @@ public class UserServiceImpl implements UserService {
     public void createUser(User user) {
         userDao.save(user);
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userDao.findAllUsers();
+    }
+
+    @Override
+    public List<UserRole> getAllRoles() {
+        return userDao.findAllRoles();
+    }
+
 }

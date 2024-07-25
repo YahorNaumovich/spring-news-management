@@ -15,7 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -61,6 +63,18 @@ public class UserController {
         model.addAttribute(USER_ATTRIBUTE, user);
         return "profile";
 
+    }
+
+    @RequestMapping("/manage")
+    public  String goToUserManagementPage(Model model) {
+
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+
+        List<UserRole> roles = userService.getAllRoles();
+        model.addAttribute("roles", roles);
+
+        return "user-management";
     }
 
     @RequestMapping("/create")

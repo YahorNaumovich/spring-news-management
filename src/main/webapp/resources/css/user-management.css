@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f4f8; /* Light gray-blue background */
+}
+
+.container {
+  width: auto;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  overflow: auto; /* Allows the container to expand as needed */
+  display: table; /* Ensures the container wraps around the content */
+}
+
+.table-header {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #1e3a8a; /* Dark blue for header */
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th, .user-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.user-table th {
+  background-color: #f0f4f8;
+  color: #333;
+}
+
+.user-table td select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.user-table .delete-button {
+  padding: 5px 10px;
+  color: white;
+  background-color: #d9534f; /* Red for delete button */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.user-table .delete-button:hover {
+  background-color: #c9302c; /* Darker red on hover */
+}

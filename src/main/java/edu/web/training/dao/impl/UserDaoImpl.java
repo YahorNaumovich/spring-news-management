@@ -2,10 +2,13 @@ package edu.web.training.dao.impl;
 
 import edu.web.training.dao.UserDao;
 import edu.web.training.entity.User;
+import edu.web.training.entity.UserRole;
 import jakarta.persistence.NoResultException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -49,4 +52,17 @@ public class UserDaoImpl implements UserDao {
     public void save(User user) {
         sessionFactory.getCurrentSession().persist(user);
     }
+
+    @Override
+    public List<User> findAllUsers() {
+
+        return sessionFactory.getCurrentSession().createQuery("from User", User.class).getResultList();
+    }
+
+    @Override
+    public List<UserRole> findAllRoles() {
+
+        return sessionFactory.getCurrentSession().createQuery("from UserRole", UserRole.class).getResultList();
+    }
+
 }
