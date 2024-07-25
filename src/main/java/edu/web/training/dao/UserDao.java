@@ -2,20 +2,21 @@ package edu.web.training.dao;
 
 import edu.web.training.entity.User;
 import edu.web.training.entity.UserRole;
+import edu.web.training.exception.DaoException;
 
 import java.util.List;
 
 public interface UserDao {
 
-    User findByUsername(String username);
+    User findByUsername(String username) throws DaoException;
 
-    User findByEmail(String email);
+    User findByEmail(String email) throws DaoException;
 
-    void save(User user);
+    void save(User user) throws DaoException;
 
-    List<User> findAllUsers();
+    List<User> findAllUsers() throws DaoException;
 
-    List<UserRole> findAllRoles();
+    List<UserRole> findAllRoles() throws DaoException;
 
-    void updateUserRole(int userId, int roleId);
+    void updateUserRole(int userId, int roleId) throws DaoException;
 }

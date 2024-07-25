@@ -62,3 +62,9 @@ body {
 .user-table .delete-button:hover {
   background-color: #c9302c; /* Darker red on hover */
 }
+
+.error {
+  color: #ff0000; /* Red color for error text */
+  font-size: 0.9em;
+  margin-bottom: 15px;
+}

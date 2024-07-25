@@ -21,6 +21,9 @@
     <jsp:include page="/WEB-INF/view/header.jsp" />
     <div class="container">
       <h2 class="table-header"><fmt:message key="userManagement.title" /></h2>
+              <c:if test="${not empty error}">
+                  <div class="error">${error}</div>
+              </c:if>
       <table class="user-table">
         <thead>
           <tr>

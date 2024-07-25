@@ -4,6 +4,7 @@ import edu.web.training.entity.UserRole;
 import edu.web.training.entity.form.LoginForm;
 import edu.web.training.entity.User;
 import edu.web.training.entity.form.SignupForm;
+import edu.web.training.exception.ServiceException;
 import edu.web.training.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,10 +27,14 @@ public class UserController {
 
     private static final String LOGIN_PAGE = "login";
     private static final String SIGNUP_PAGE = "signup";
+    private static final String USER_MANAGEMENT_PAGE = "user-management";
     private static final String REDIRECT_HOME = "redirect:/";
     private static final String ERROR_ATTRIBUTE = "error";
+    private static final String USERS_ATTRIBUTE = "users";
+    private static final String ROLES_ATTRIBUTE = "roles";
     private static final String LOGIN_FORM_ATTRIBUTE = "loginForm";
     private static final String SIGNUP_FORM_ATTRIBUTE = "signupForm";
+    private static final String PROFILE_PAGE = "profile";
     private static final String USER_ATTRIBUTE = "user";
     private static final String DEFAULT_ROLE_NAME = "viewer";
     private static final int DEFAULT_ROLE_ID = 3;
@@ -61,85 +66,96 @@ public class UserController {
         User user = (User) session.getAttribute(USER_ATTRIBUTE);
 
         model.addAttribute(USER_ATTRIBUTE, user);
-        return "profile";
+        return PROFILE_PAGE;
 
     }
 
     @RequestMapping("/manage")
-    public  String goToUserManagementPage(Model model) {
+    public String goToUserManagementPage(Model model) {
+        try {
+            List<User> users = userService.getAllUsers();
+            model.addAttribute(USERS_ATTRIBUTE, users);
 
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
+            List<UserRole> roles = userService.getAllRoles();
+            model.addAttribute(ROLES_ATTRIBUTE, roles);
 
-        List<UserRole> roles = userService.getAllRoles();
-        model.addAttribute("roles", roles);
-
-        return "user-management";
+            return USER_MANAGEMENT_PAGE;
+        } catch (ServiceException e) {
+            model.addAttribute(ERROR_ATTRIBUTE, "Failed to load user management data");
+            return USER_MANAGEMENT_PAGE;
+        }
     }
 
     @RequestMapping("/create")
     public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model, Locale locale) {
-
         if (bindingResult.hasErrors()) {
             return SIGNUP_PAGE;
         }
 
-        boolean usernameExists = userService.usernameExists(signupForm.getUsername());
-        boolean emailExists = userService.emailExists(signupForm.getEmail());
+        try {
+            boolean usernameExists = userService.usernameExists(signupForm.getUsername());
+            boolean emailExists = userService.emailExists(signupForm.getEmail());
 
-        if (usernameExists) {
-            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.username.taken", null, locale));
+            if (usernameExists) {
+                model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.username.taken", null, locale));
+                return SIGNUP_PAGE;
+            }
+
+            if (emailExists) {
+                model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.email.registered", null, locale));
+                return SIGNUP_PAGE;
+            }
+
+            // Create a new user
+            User newUser = new User();
+            newUser.setUsername(signupForm.getUsername());
+            newUser.setEmail(signupForm.getEmail());
+            newUser.setPassword(signupForm.getPassword());
+            UserRole defaultRole = new UserRole();
+            defaultRole.setId(DEFAULT_ROLE_ID);
+            defaultRole.setName(DEFAULT_ROLE_NAME);
+            newUser.setUserRole(defaultRole);
+
+            userService.createUser(newUser);
+
+            return REDIRECT_HOME;
+        } catch (ServiceException e) {
+            model.addAttribute(ERROR_ATTRIBUTE, "Failed to create user");
             return SIGNUP_PAGE;
         }
-
-        if (emailExists) {
-            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.email.registered", null, locale));
-            return SIGNUP_PAGE;
-        }
-
-        // Create a new user
-        User newUser = new User();
-        newUser.setUsername(signupForm.getUsername());
-        newUser.setEmail(signupForm.getEmail());
-        newUser.setPassword(signupForm.getPassword());
-        UserRole defaultRole = new UserRole();
-        defaultRole.setId(DEFAULT_ROLE_ID);
-        defaultRole.setName(DEFAULT_ROLE_NAME);
-        newUser.setUserRole(defaultRole);
-
-        userService.createUser(newUser);
-
-        return REDIRECT_HOME;
     }
 
     @PostMapping("/authenticate")
     public String authenticateUser(@Valid @ModelAttribute(LOGIN_FORM_ATTRIBUTE) LoginForm loginForm, BindingResult bindingResult, Model model, HttpSession session, Locale locale) {
-
         if (bindingResult.hasErrors()) {
             return LOGIN_PAGE;
         }
 
-        User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
+        try {
+            User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
 
-        if (user == null) {
+            if (user == null) {
+                model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.invalid.credentials", null, locale));
+                return LOGIN_PAGE;
+            }
 
-            model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.invalid.credentials", null, locale));
-
+            session.setAttribute(USER_ATTRIBUTE, user);
+            return REDIRECT_HOME;
+        } catch (ServiceException e) {
+            model.addAttribute(ERROR_ATTRIBUTE, "Failed to authenticate user");
             return LOGIN_PAGE;
         }
-
-        session.setAttribute(USER_ATTRIBUTE, user);
-
-        return REDIRECT_HOME;
-
     }
 
     @RequestMapping("/update-role")
-    public String updateUserRole(@RequestParam("id") int userId, @RequestParam("roleId") int roleId){
-
-        userService.updateUserRole(userId, roleId);
-
-        return "redirect:/user/manage";
+    public String updateUserRole(@RequestParam("id") int userId, @RequestParam("roleId") int roleId, Model model) {
+        try {
+            userService.updateUserRole(userId, roleId);
+            return "redirect:/user/manage";
+        } catch (ServiceException e) {
+            model.addAttribute(ERROR_ATTRIBUTE, "Failed to update user role");
+            return "redirect:/user/manage";
+        }
     }
 
     @RequestMapping("/logout")

@@ -16,6 +16,9 @@
     <jsp:include page="/WEB-INF/view/header.jsp" />
 
     <main class="main-content">
+            <c:if test="${not empty error}">
+                <div class="error">${error}</div>
+            </c:if>
         <div class="news-header">
                     <c:choose>
                         <c:when test="${sessionScope.user != null && (sessionScope.user.userRole.name == 'Admin' || sessionScope.user.userRole.name == 'Editor')}">

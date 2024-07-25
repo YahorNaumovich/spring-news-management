@@ -3,6 +3,7 @@ package edu.web.training.dao.impl;
 import edu.web.training.dao.UserDao;
 import edu.web.training.entity.User;
 import edu.web.training.entity.UserRole;
+import edu.web.training.exception.DaoException;
 import jakarta.persistence.NoResultException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,63 +18,72 @@ public class UserDaoImpl implements UserDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws DaoException {
         try {
-
             return (User) sessionFactory.getCurrentSession()
                     .createQuery("from User where username = :username")
                     .setParameter("username", username)
                     .getSingleResult();
-
-        } catch (NoResultException e) {
-
-            return null; // or handle the exception as needed
-
+        } catch (Exception e) {
+            throw new DaoException("Failed to find user by username: " + username, e);
         }
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User findByEmail(String email) throws DaoException {
         try {
-
             return (User) sessionFactory.getCurrentSession()
                     .createQuery("from User where email = :email")
                     .setParameter("email", email)
                     .getSingleResult();
+        } catch (Exception e) {
+            throw new DaoException("Failed to find user by email: " + email, e);
+        }
+    }
 
-        } catch (NoResultException e) {
 
-            return null;
-
+    @Override
+    public void save(User user) throws DaoException {
+        try {
+            sessionFactory.getCurrentSession().persist(user);
+        } catch (Exception e) {
+            throw new DaoException("Failed to save user", e);
         }
     }
 
     @Override
-    public void save(User user) {
-        sessionFactory.getCurrentSession().persist(user);
+    public List<User> findAllUsers() throws DaoException {
+        try {
+            return sessionFactory.getCurrentSession().createQuery("from User", User.class).getResultList();
+        } catch (Exception e) {
+            throw new DaoException("Failed to retrieve all users", e);
+        }
     }
 
     @Override
-    public List<User> findAllUsers() {
-
-        return sessionFactory.getCurrentSession().createQuery("from User", User.class).getResultList();
+    public List<UserRole> findAllRoles() throws DaoException {
+        try {
+            return sessionFactory.getCurrentSession().createQuery("from UserRole", UserRole.class).getResultList();
+        } catch (Exception e) {
+            throw new DaoException("Failed to retrieve all user roles", e);
+        }
     }
 
     @Override
-    public List<UserRole> findAllRoles() {
+    public void updateUserRole(int userId, int roleId) throws DaoException {
+        try {
+            User user = sessionFactory.getCurrentSession().get(User.class, userId);
+            UserRole userRole = sessionFactory.getCurrentSession().get(UserRole.class, roleId);
 
-        return sessionFactory.getCurrentSession().createQuery("from UserRole", UserRole.class).getResultList();
-    }
-
-    @Override
-    public void updateUserRole(int userId, int roleId) {
-
-        User user = sessionFactory.getCurrentSession().get(User.class, userId);
-        UserRole userRole = sessionFactory.getCurrentSession().get(UserRole.class, roleId);
-
-        user.setUserRole(userRole);
-
-        sessionFactory.getCurrentSession().merge(user);
+            if (user != null && userRole != null) {
+                user.setUserRole(userRole);
+                sessionFactory.getCurrentSession().merge(user);
+            } else {
+                throw new DaoException("User or UserRole not found for userId: " + userId + " or roleId: " + roleId);
+            }
+        } catch (Exception e) {
+            throw new DaoException("Failed to update user role for userId: " + userId + " and roleId: " + roleId, e);
+        }
     }
 
 }
