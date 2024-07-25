@@ -53,6 +53,16 @@ public class UserController {
         return SIGNUP_PAGE;
     }
 
+    @RequestMapping("/profile")
+    public String goToProfilePage(Model model, HttpSession session) {
+
+        User user = (User) session.getAttribute(USER_ATTRIBUTE);
+
+        model.addAttribute(USER_ATTRIBUTE, user);
+        return "profile";
+
+    }
+
     @RequestMapping("/create")
     public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model, Locale locale) {
 

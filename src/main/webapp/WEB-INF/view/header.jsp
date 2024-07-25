@@ -22,7 +22,7 @@
   <div class="header-right">
     <c:choose>
       <c:when test="${not empty sessionScope.user}">
-        <a href="<c:url value='/profile'/>">${sessionScope.user.username}</a>
+        <a href="<c:url value='/user/profile'/>">${sessionScope.user.username}</a>
         <a href="<c:url value='/user/logout'/>"><fmt:message key="header.logout"/></a>
       </c:when>
       <c:otherwise>
