@@ -111,9 +111,7 @@ public class UserController {
             newUser.setUsername(signupForm.getUsername());
             newUser.setEmail(signupForm.getEmail());
             newUser.setPassword(signupForm.getPassword());
-            UserRole defaultRole = new UserRole();
-            defaultRole.setId(DEFAULT_ROLE_ID);
-            defaultRole.setName(DEFAULT_ROLE_NAME);
+            UserRole defaultRole = new UserRole(DEFAULT_ROLE_ID, DEFAULT_ROLE_NAME);
             newUser.setUserRole(defaultRole);
 
             userService.createUser(newUser);
