@@ -25,17 +25,18 @@ import java.util.Locale;
 @RequestMapping("/user")
 public class UserController {
 
+    private static final String REDIRECT_HOME = "redirect:/";
+    private static final String REDIRECT_USER_MANAGEMENT = "redirect:/user/manage";
     private static final String LOGIN_PAGE = "login";
     private static final String SIGNUP_PAGE = "signup";
+    private static final String PROFILE_PAGE = "profile";
     private static final String USER_MANAGEMENT_PAGE = "user-management";
-    private static final String REDIRECT_HOME = "redirect:/";
     private static final String ERROR_ATTRIBUTE = "error";
+    private static final String USER_ATTRIBUTE = "user";
     private static final String USERS_ATTRIBUTE = "users";
     private static final String ROLES_ATTRIBUTE = "roles";
     private static final String LOGIN_FORM_ATTRIBUTE = "loginForm";
     private static final String SIGNUP_FORM_ATTRIBUTE = "signupForm";
-    private static final String PROFILE_PAGE = "profile";
-    private static final String USER_ATTRIBUTE = "user";
     private static final String DEFAULT_ROLE_NAME = "viewer";
     private static final int DEFAULT_ROLE_ID = 3;
     @Autowired
@@ -149,7 +150,7 @@ public class UserController {
     public String updateUserRole(@RequestParam("id") int userId, @RequestParam("roleId") int roleId, Model model, Locale locale) {
         try {
             userService.updateUserRole(userId, roleId);
-            return "redirect:/user/manage";
+            return REDIRECT_USER_MANAGEMENT;
         } catch (ServiceException e) {
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.update-role", null, locale));
             return USER_MANAGEMENT_PAGE;

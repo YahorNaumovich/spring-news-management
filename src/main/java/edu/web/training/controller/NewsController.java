@@ -36,7 +36,6 @@ public class NewsController {
     private static final String ARTICLE_FORM_ATTRIBUTE = "articleForm";
     private static final String IS_EDIT_MODE_ATTRIBUTE = "isEditMode";
     private static final String IMAGES_DIRECTORY = "/images";
-
     private static final String ERROR_ATTRIBUTE = "error";
 
     @Autowired
