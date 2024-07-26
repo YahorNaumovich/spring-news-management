@@ -4,7 +4,6 @@ import edu.web.training.dao.UserDao;
 import edu.web.training.entity.User;
 import edu.web.training.entity.UserRole;
 import edu.web.training.exception.DaoException;
-import jakarta.persistence.NoResultException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
