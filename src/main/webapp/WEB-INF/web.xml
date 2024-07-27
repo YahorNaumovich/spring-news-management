@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         id="WebApp_ID"
+         version="3.1">
+
+  <!-- The display name of the application -->
   <display-name>spring-news-management</display-name>
 
+  <!-- Define the DispatcherServlet for Spring MVC -->
   <servlet>
     <servlet-name>dispatcher</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+    <!-- Specify the location of the Spring application context configuration file -->
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>/WEB-INF/applicationContext.xml</param-value>
     </init-param>
+
+    <!-- Configuration for handling multipart requests (file uploads) -->
     <multipart-config>
-      <max-file-size>20848820</max-file-size>
-      <max-request-size>418018841</max-request-size>
-      <file-size-threshold>1048576</file-size-threshold>
+      <!-- Maximum size of a single uploaded file -->
+      <max-file-size>20848820</max-file-size> <!-- Approximately 20 MB -->
+
+      <!-- Maximum size of the entire request including all files -->
+      <max-request-size>418018841</max-request-size> <!-- Approximately 400 MB -->
+
+      <!-- File size threshold after which files will be written to disk -->
+      <file-size-threshold>1048576</file-size-threshold> <!-- 1 MB -->
     </multipart-config>
+
+    <!-- Load the DispatcherServlet on server startup -->
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <!-- Map all incoming requests to the DispatcherServlet -->
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>/</url-pattern>

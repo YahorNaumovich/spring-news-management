@@ -14,39 +14,35 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!-- Add support for component scanning -->
+    <!-- Enable component scanning to auto-detect and register beans in the specified package -->
     <context:component-scan base-package="edu.web.training" />
 
-    <!-- Add support for conversion, formatting and validation support -->
+    <!-- Enable annotation-driven MVC support including @Controller and @RequestMapping annotations -->
     <mvc:annotation-driven/>
 
-    <!-- Multipart resolver -->
+    <!-- Define a multipart resolver to handle file uploads -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
 
-    <!-- Define Spring MVC view resolver -->
-    <bean
-            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <!-- Define a view resolver for resolving JSP views with specific prefix and suffix -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/view/" />
         <property name="suffix" value=".jsp" />
     </bean>
 
-    <!-- Define Database DataSource / connection pool -->
-    <bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-          destroy-method="close">
+    <!-- Configure a data source with C3P0 connection pool for connecting to a MySQL database -->
+    <bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
         <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring-news-management?useSSL=false" />
         <property name="user" value="root" />
         <property name="password" value="Egor2002" />
-
-        <!-- these are connection pool properties for C3P0 -->
+        <!-- Connection pool properties -->
         <property name="minPoolSize" value="5" />
         <property name="maxPoolSize" value="20" />
         <property name="maxIdleTime" value="30000" />
     </bean>
 
-    <!-- Setup Hibernate session factory -->
-    <bean id="sessionFactory"
-          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+    <!-- Configure the Hibernate session factory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="myDataSource" />
         <property name="packagesToScan" value="edu.web.training.entity" />
         <property name="hibernateProperties">
@@ -57,39 +53,41 @@
         </property>
     </bean>
 
-    <!-- Setup Hibernate transaction manager -->
-    <bean id="myTransactionManager"
-          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+    <!-- Define a transaction manager for managing Hibernate transactions -->
+    <bean id="myTransactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <!-- Define the validator bean and use the message source for validation messages -->
+    <!-- Define a validator bean for validation support and link it to the message source for custom messages -->
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="validationMessageSource" ref="messageSource"/>
     </bean>
     <mvc:annotation-driven validator="validator"/>
 
-    <!-- Enable configuration of transactional behavior based on annotations -->
+    <!-- Enable transaction management based on annotations (e.g., @Transactional) -->
     <tx:annotation-driven transaction-manager="myTransactionManager" />
 
-    <!-- Add support for reading web resources: css, images, js, etc ... -->
+    <!-- Configure resource handling for serving static resources like CSS, images, and JavaScript -->
     <mvc:resources location="/resources/" mapping="/resources/**"/>
     <mvc:resources location="/images/" mapping="/images/**"/>
 
+    <!-- Define a message source for internationalization (i18n) and set default encoding -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="classpath:messages"/>
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
+    <!-- Define a locale resolver for managing user locale information -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="en"/>
     </bean>
 
+    <!-- Define a locale change interceptor to allow changing the current locale via a request parameter -->
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
         <property name="paramName" value="lang"/>
     </bean>
 
-    <!-- Register interceptors -->
+    <!-- Register interceptors, including the locale change interceptor -->
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
             <property name="paramName" value="lang"/>
