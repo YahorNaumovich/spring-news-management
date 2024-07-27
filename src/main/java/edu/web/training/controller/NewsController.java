@@ -25,9 +25,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import static edu.web.training.controller.UserController.REDIRECT_HOME;
-import static edu.web.training.controller.UserController.USER_ATTRIBUTE;
-
 @Controller
 public class NewsController {
 
