@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface UserDao {
 
-    User findByUsername(String username) throws DaoException;
+    User getUserByUsername(String username) throws DaoException;
 
-    User findByEmail(String email) throws DaoException;
+    User getUserByEmail(String email) throws DaoException;
 
-    void save(User user) throws DaoException;
+    void saveUser(User user) throws DaoException;
 
-    List<User> findAllUsers() throws DaoException;
+    List<User> getAllUsers() throws DaoException;
 
-    List<UserRole> findAllRoles() throws DaoException;
+    List<UserRole> getAllRoles() throws DaoException;
 
     void updateUserRole(int userId, int roleId) throws DaoException;
 }

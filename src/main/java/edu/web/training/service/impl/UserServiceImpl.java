@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User authenticate(String username, String password) throws ServiceException {
         try {
-            User user = userDao.findByUsername(username);
+            User user = userDao.getUserByUsername(username);
             if (user != null && user.getPassword().equals(password)) {
                 return user;
             }
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean usernameExists(String username) throws ServiceException {
         try {
-            return userDao.findByUsername(username) != null;
+            return userDao.getUserByUsername(username) != null;
         } catch (DaoException e) {
             throw new ServiceException("Failed to check existence of username: " + username, e);
         }
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean emailExists(String email) throws ServiceException {
         try {
-            return userDao.findByEmail(email) != null;
+            return userDao.getUserByEmail(email) != null;
         } catch (DaoException e) {
             throw new ServiceException("Failed to check existence of email: " + email, e);
         }
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(User user) throws ServiceException {
         try {
-            userDao.save(user);
+            userDao.saveUser(user);
         } catch (DaoException e) {
             throw new ServiceException("Failed to create user with username: " + user.getUsername(), e);
         }
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() throws ServiceException {
         try {
-            return userDao.findAllUsers();
+            return userDao.getAllUsers();
         } catch (DaoException e) {
             throw new ServiceException("Failed to retrieve all users", e);
         }
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserRole> getAllRoles() throws ServiceException {
         try {
-            return userDao.findAllRoles();
+            return userDao.getAllRoles();
         } catch (DaoException e) {
             throw new ServiceException("Failed to retrieve all user roles", e);
         }

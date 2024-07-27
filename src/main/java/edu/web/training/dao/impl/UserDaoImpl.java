@@ -17,7 +17,7 @@ public class UserDaoImpl implements UserDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public User findByUsername(String username) throws DaoException {
+    public User getUserByUsername(String username) throws DaoException {
         try {
             return (User) sessionFactory.getCurrentSession()
                     .createQuery("from User where username = :username")
@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findByEmail(String email) throws DaoException {
+    public User getUserByEmail(String email) throws DaoException {
         try {
             return (User) sessionFactory.getCurrentSession()
                     .createQuery("from User where email = :email")
@@ -42,7 +42,7 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public void save(User user) throws DaoException {
+    public void saveUser(User user) throws DaoException {
         try {
             sessionFactory.getCurrentSession().persist(user);
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findAllUsers() throws DaoException {
+    public List<User> getAllUsers() throws DaoException {
         try {
             return sessionFactory.getCurrentSession().createQuery("from User", User.class).getResultList();
         } catch (Exception e) {
@@ -60,7 +60,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<UserRole> findAllRoles() throws DaoException {
+    public List<UserRole> getAllRoles() throws DaoException {
         try {
             return sessionFactory.getCurrentSession().createQuery("from UserRole", UserRole.class).getResultList();
         } catch (Exception e) {
