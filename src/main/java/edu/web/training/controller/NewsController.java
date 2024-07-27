@@ -1,11 +1,13 @@
 package edu.web.training.controller;
 
 import edu.web.training.entity.Article;
+import edu.web.training.entity.User;
 import edu.web.training.entity.form.ArticleForm;
 import edu.web.training.entity.Category;
 import edu.web.training.exception.ServiceException;
 import edu.web.training.service.NewsService;
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,12 +25,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import static edu.web.training.controller.UserController.REDIRECT_HOME;
+import static edu.web.training.controller.UserController.USER_ATTRIBUTE;
+
 @Controller
 public class NewsController {
 
+    private static final String REDIRECT_HOME = "redirect:/";
     private static final String REDIRECT_NEWS = "redirect:/news";
     private static final String NEWS_PAGE = "news";
     private static final String ARTICLE_PAGE = "article";
+    private static final String USER_ATTRIBUTE = "user";
     private static final String ARTICLE_FORM_PAGE = "article-form";
     private static final String ARTICLES_ATTRIBUTE = "articles";
     private static final String ARTICLE_ATTRIBUTE = "article";
@@ -87,7 +94,12 @@ public class NewsController {
     }
 
     @RequestMapping("/article/add")
-    public String goToArticleForm(Model model, Locale locale) {
+    public String goToArticleForm(Model model, Locale locale, HttpSession session) {
+
+        if (!isUserAdminOrEditor(session)) {
+            return REDIRECT_HOME;
+        }
+
         try {
             List<Category> categories = newsService.getAllCategories();
             model.addAttribute(ARTICLE_FORM_ATTRIBUTE, new ArticleForm());
@@ -101,7 +113,12 @@ public class NewsController {
     }
 
     @RequestMapping("/article/edit")
-    public String goToArticleEditForm(@RequestParam("id") int id, Model model, Locale locale) {
+    public String goToArticleEditForm(@RequestParam("id") int id, Model model, Locale locale, HttpSession session) {
+
+        if (!isUserAdminOrEditor(session)) {
+            return REDIRECT_HOME;
+        }
+
         try {
             List<Category> categories = newsService.getAllCategories();
             Article article = newsService.getArticleById(id);
@@ -119,7 +136,12 @@ public class NewsController {
     }
 
     @PostMapping("/article/save")
-    public String saveArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model, Locale locale) {
+    public String saveArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model, Locale locale, HttpSession session) {
+
+        if (!isUserAdminOrEditor(session)) {
+            return REDIRECT_HOME;
+        }
+
         if (bindingResult.hasErrors()) {
             try {
                 List<Category> categories = newsService.getAllCategories();
@@ -144,7 +166,12 @@ public class NewsController {
     }
 
     @PostMapping("/article/update")
-    public String updateArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model, Locale locale) {
+    public String updateArticle(@Valid @ModelAttribute ArticleForm articleForm, BindingResult bindingResult, Model model, Locale locale, HttpSession session) {
+
+        if (!isUserAdminOrEditor(session)) {
+            return REDIRECT_HOME;
+        }
+
         if (bindingResult.hasErrors()) {
             try {
                 List<Category> categories = newsService.getAllCategories();
@@ -173,7 +200,12 @@ public class NewsController {
     }
 
     @RequestMapping("/article/delete")
-    public String deleteArticle(@RequestParam("id") int id, Model model, Locale locale) {
+    public String deleteArticle(@RequestParam("id") int id, Model model, Locale locale, HttpSession session) {
+
+        if (!isUserAdminOrEditor(session)) {
+            return REDIRECT_HOME;
+        }
+
         try {
             newsService.deleteArticle(id);
             return REDIRECT_NEWS;
@@ -202,4 +234,10 @@ public class NewsController {
 
         return IMAGES_DIRECTORY + "/" + image.getOriginalFilename();
     }
+
+    private boolean isUserAdminOrEditor(HttpSession session) {
+        User user = (User) session.getAttribute(USER_ATTRIBUTE);
+        return user != null && (user.getUserRole().getName().equals("Admin") || user.getUserRole().getName().equals("Editor"));
+    }
+
 }

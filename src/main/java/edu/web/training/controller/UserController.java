@@ -27,6 +27,7 @@ public class UserController {
 
     private static final String REDIRECT_HOME = "redirect:/";
     private static final String REDIRECT_USER_MANAGEMENT = "redirect:/user/manage";
+    private static final String REDIRECT_LOGIN = "redirect:/user/login";
     private static final String LOGIN_PAGE = "login";
     private static final String SIGNUP_PAGE = "signup";
     private static final String PROFILE_PAGE = "profile";
@@ -66,13 +67,23 @@ public class UserController {
 
         User user = (User) session.getAttribute(USER_ATTRIBUTE);
 
+        if (user == null) {
+            return REDIRECT_LOGIN;
+        }
+
         model.addAttribute(USER_ATTRIBUTE, user);
         return PROFILE_PAGE;
 
     }
 
     @RequestMapping("/manage")
-    public String goToUserManagementPage(Model model, Locale locale) {
+    public String goToUserManagementPage(Model model, Locale locale, HttpSession session) {
+
+        User user = (User) session.getAttribute(USER_ATTRIBUTE);
+        if (user == null || !user.getUserRole().getName().equals("Admin")) {
+            return REDIRECT_HOME;
+        }
+
         try {
             List<User> users = userService.getAllUsers();
             model.addAttribute(USERS_ATTRIBUTE, users);
