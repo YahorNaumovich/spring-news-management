@@ -23,7 +23,7 @@ public class NewsDaoImpl implements NewsDao {
         try {
             return sessionFactory
                     .getCurrentSession()
-                    .createQuery("from Article", Article.class)
+                    .createQuery("from Article order by id desc", Article.class)
                     .getResultList();
         } catch (Exception e) {
             throw new DaoException("Failed to retrieve all articles", e);
@@ -58,7 +58,7 @@ public class NewsDaoImpl implements NewsDao {
         try {
             return sessionFactory
                     .getCurrentSession()
-                    .createQuery("from Article where category.id = :categoryId", Article.class)
+                    .createQuery("from Article where category.id = :categoryId order by id desc", Article.class)
                     .setParameter("categoryId", categoryId)
                     .getResultList();
         } catch (Exception e) {

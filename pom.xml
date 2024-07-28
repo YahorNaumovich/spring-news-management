@@ -4,6 +4,10 @@
   <groupId>edu.training.web</groupId>
   <artifactId>spring-news-management</artifactId>
   <packaging>war</packaging>
+  <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+  </properties>
   <version>1.0-SNAPSHOT</version>
   <name>spring-news-management Maven Webapp</name>
   <url>http://maven.apache.org</url>
