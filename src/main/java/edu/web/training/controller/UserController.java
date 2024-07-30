@@ -80,11 +80,13 @@ public class UserController {
     public String goToUserManagementPage(Model model, Locale locale, HttpSession session) {
 
         User user = (User) session.getAttribute(USER_ATTRIBUTE);
+
         if (user == null || !user.getUserRole().getName().equals("Admin")) {
             return REDIRECT_HOME;
         }
 
         try {
+
             List<User> users = userService.getAllUsers();
             model.addAttribute(USERS_ATTRIBUTE, users);
 
@@ -92,19 +94,24 @@ public class UserController {
             model.addAttribute(ROLES_ATTRIBUTE, roles);
 
             return USER_MANAGEMENT_PAGE;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.user-management", null, locale));
             return USER_MANAGEMENT_PAGE;
+
         }
     }
 
     @RequestMapping("/create")
     public String createUser(@Valid @ModelAttribute(SIGNUP_FORM_ATTRIBUTE) SignupForm signupForm, BindingResult bindingResult, Model model, Locale locale) {
+
         if (bindingResult.hasErrors()) {
             return SIGNUP_PAGE;
         }
 
         try {
+
             boolean usernameExists = userService.usernameExists(signupForm.getUsername());
             boolean emailExists = userService.emailExists(signupForm.getEmail());
 
@@ -118,7 +125,6 @@ public class UserController {
                 return SIGNUP_PAGE;
             }
 
-            // Create a new user
             User newUser = new User();
             newUser.setUsername(signupForm.getUsername());
             newUser.setEmail(signupForm.getEmail());
@@ -129,19 +135,24 @@ public class UserController {
             userService.createUser(newUser);
 
             return REDIRECT_HOME;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.create", null, locale));
             return SIGNUP_PAGE;
+
         }
     }
 
     @PostMapping("/authenticate")
     public String authenticateUser(@Valid @ModelAttribute(LOGIN_FORM_ATTRIBUTE) LoginForm loginForm, BindingResult bindingResult, Model model, HttpSession session, Locale locale) {
+
         if (bindingResult.hasErrors()) {
             return LOGIN_PAGE;
         }
 
         try {
+
             User user = userService.authenticate(loginForm.getUsername(), loginForm.getPassword());
 
             if (user == null) {
@@ -150,21 +161,30 @@ public class UserController {
             }
 
             session.setAttribute(USER_ATTRIBUTE, user);
+
             return REDIRECT_HOME;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.authenticate", null, locale));
             return LOGIN_PAGE;
+
         }
     }
 
     @RequestMapping("/update-role")
     public String updateUserRole(@RequestParam("id") int userId, @RequestParam("roleId") int roleId, Model model, Locale locale) {
+
         try {
+
             userService.updateUserRole(userId, roleId);
             return REDIRECT_USER_MANAGEMENT;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.user.update-role", null, locale));
             return USER_MANAGEMENT_PAGE;
+
         }
     }
 

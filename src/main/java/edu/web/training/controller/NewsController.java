@@ -58,7 +58,9 @@ public class NewsController {
 
     @RequestMapping("/news")
     public String showAllNews(@RequestParam(value = "category", required = false) Integer categoryId, Model model, Locale locale) {
+
         try {
+
             List<Article> articles;
 
             if (categoryId != null) {
@@ -72,21 +74,30 @@ public class NewsController {
             model.addAttribute(CATEGORIES_ATTRIBUTE, categories);
 
             return NEWS_PAGE;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.news.load", null, locale));
             return NEWS_PAGE;
+
         }
     }
 
     @RequestMapping("/article")
     public String showArticle(@RequestParam("id") int id, Model model, Locale locale) {
+
         try {
+
             Article article = newsService.getArticleById(id);
             model.addAttribute(ARTICLE_ATTRIBUTE, article);
+
             return ARTICLE_PAGE;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.load", null, locale));
             return NEWS_PAGE;
+
         }
     }
 
@@ -98,14 +109,19 @@ public class NewsController {
         }
 
         try {
+
             List<Category> categories = newsService.getAllCategories();
             model.addAttribute(ARTICLE_FORM_ATTRIBUTE, new ArticleForm());
             model.addAttribute(CATEGORIES_ATTRIBUTE, categories);
             model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, false);
+
             return ARTICLE_FORM_PAGE;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article-form.load", null, locale));
             return NEWS_PAGE;
+
         }
     }
 
@@ -117,6 +133,7 @@ public class NewsController {
         }
 
         try {
+
             List<Category> categories = newsService.getAllCategories();
             Article article = newsService.getArticleById(id);
 
@@ -125,10 +142,14 @@ public class NewsController {
             model.addAttribute(ARTICLE_FORM_ATTRIBUTE, articleForm);
             model.addAttribute(CATEGORIES_ATTRIBUTE, categories);
             model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, true);
+
             return ARTICLE_FORM_PAGE;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.edit-article-form.load", null, locale));
             return NEWS_PAGE;
+
         }
     }
 
@@ -140,25 +161,36 @@ public class NewsController {
         }
 
         if (bindingResult.hasErrors()) {
+
             try {
                 List<Category> categories = newsService.getAllCategories();
                 model.addAttribute(CATEGORIES_ATTRIBUTE, categories);
                 model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, false);
+
                 return ARTICLE_FORM_PAGE;
+
             } catch (ServiceException e) {
+
                 model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.categories.load", null, locale));
                 return ARTICLE_FORM_PAGE;
+
             }
         }
 
         try {
+
             String relativePath = handleImageUpload(articleForm.getImage());
+
             newsService.saveArticle(articleForm.getTitle(), articleForm.getArticleText(),
                     relativePath, articleForm.getCategoryId(), articleForm.getUserId());
+
             return REDIRECT_NEWS;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.save", null, locale));
             return ARTICLE_FORM_PAGE;
+
         }
     }
 
@@ -170,29 +202,44 @@ public class NewsController {
         }
 
         if (bindingResult.hasErrors()) {
+
             try {
                 List<Category> categories = newsService.getAllCategories();
                 model.addAttribute(CATEGORIES_ATTRIBUTE, categories);
                 model.addAttribute(IS_EDIT_MODE_ATTRIBUTE, true);
+
                 return ARTICLE_FORM_PAGE;
+
             } catch (ServiceException e) {
+
                 model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.categories.load", null, locale));
                 return ARTICLE_FORM_PAGE;
+
             }
         }
 
         try {
+
             if (articleForm.getImage().isEmpty()) {
+
                 newsService.updateArticleWithoutImage(articleForm.getArticleId(), articleForm.getTitle(), articleForm.getArticleText(), articleForm.getCategoryId(), articleForm.getUserId());
+
             } else {
+
                 String relativePath = handleImageUpload(articleForm.getImage());
+
                 newsService.updateArticle(articleForm.getArticleId(), articleForm.getTitle(), articleForm.getArticleText(),
                         relativePath, articleForm.getCategoryId(), articleForm.getUserId());
+
             }
+
             return REDIRECT_NEWS;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.update", null, locale));
             return ARTICLE_FORM_PAGE;
+
         }
     }
 
@@ -204,11 +251,15 @@ public class NewsController {
         }
 
         try {
+
             newsService.deleteArticle(id);
             return REDIRECT_NEWS;
+
         } catch (ServiceException e) {
+
             model.addAttribute(ERROR_ATTRIBUTE, messageSource.getMessage("error.article.delete", null, locale));
             return NEWS_PAGE;
+
         }
     }
 
@@ -224,17 +275,23 @@ public class NewsController {
         File dest = new File(filePath);
 
         try {
+
             image.transferTo(dest);
+
         } catch (IOException e) {
+
             throw new RuntimeException("Failed to upload image", e);
+
         }
 
         return IMAGES_DIRECTORY + "/" + image.getOriginalFilename();
     }
 
     private boolean isUserAdminOrEditor(HttpSession session) {
+
         User user = (User) session.getAttribute(USER_ATTRIBUTE);
         return user != null && (user.getUserRole().getName().equals("Admin") || user.getUserRole().getName().equals("Editor"));
+
     }
 
 }
